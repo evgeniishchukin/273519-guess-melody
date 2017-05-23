@@ -1,7 +1,7 @@
 # Личный проект «Угадай мелодию» [![Build status][travis-image]][travis-url]
 
 * Студент: [Евгений Щукин](https://up.htmlacademy.ru/ecmascript/2/user/273519).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Колодеев](https://htmlacademy.ru/profile/id436983).
 
 ---
 
