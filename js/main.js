@@ -52,6 +52,7 @@ window.main = (function () {
               return;
             } else {
               addScreen(i);
+
               return;
             }
           }
