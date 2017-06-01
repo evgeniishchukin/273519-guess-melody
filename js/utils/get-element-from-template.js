@@ -1,6 +1,6 @@
-const getElementFromTemplate = (temp) => {
+const getElementFromTemplate = (template) => {
   const container = document.createElement(`div`);
-  container.innerHTML = temp;
+  container.innerHTML = template;
   return container.children[0];
 };
 

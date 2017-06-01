@@ -3,7 +3,7 @@ import renderScreen from '../utils/render-screen';                              
 import levelGenre from './level-genre';                                           // Импортируем модуль с экраном Genre
 
 // Задаем нужный элемент шаблона в виде строки
-const temp = `
+const template = `
 <section class="main main--level main--level-artist">
   <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
     <circle
@@ -46,8 +46,7 @@ const temp = `
   </div>
 </section>`;
 
-
-const levelArtist = getElementFromTemplate(temp);                               // Переводим шаблон в DOM элемент
+const levelArtist = getElementFromTemplate(template);                               // Переводим шаблон в DOM элемент
 
 const answers = levelArtist.querySelectorAll(`.main-answer`);                   // Определяем массив возможных ответов
 

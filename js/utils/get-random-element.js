@@ -1,5 +1,5 @@
 const getRandomElement = (array) => {
-  let number = Math.round(Math.random() * (array.length - 1));
+  const number = Math.round(Math.random() * (array.length - 1));
   return array[number];
 };
 

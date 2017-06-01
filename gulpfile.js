@@ -37,12 +37,6 @@ gulp.task('style', function () {
     .pipe(gulp.dest('build/css'));
 });
 
-gulp.task('scripts', function () {
-  return gulp.src('js/**/*.js')
-    .pipe(plumber())
-    .pipe(gulp.dest('build/js/'));
-});
-
 gulp.task('test', function () {
 });
 

@@ -3,7 +3,7 @@ import renderScreen from '../utils/render-screen';                              
 import welcome from './welcome';                                                  // Импортируем модуль с экраном welcome
 
 // Задаем нужный элемент шаблона в виде строки
-const temp = `
+const template = `
 <section class="main main--result main--result-success">
   <section class="logo" title="Угадай мелодию"><h1>Угадай мелодию</h1></section>
   <h2 class="title">Вы настоящий меломан!</h2>
@@ -12,17 +12,17 @@ const temp = `
   <span role="button" tabindex="0" class="main-replay">Сыграть ещё раз</span>
 </section>`;
 
-const resultGood = getElementFromTemplate(temp);                                 // Переводим шаблон в DOM элемент
+const resultGood = getElementFromTemplate(template);                                 // Переводим шаблон в DOM элемент
 
 const replay = resultGood.querySelector(`.main-replay`);                         // Определяем кнопку - начать заново
 
 // При нажатии на кнопку начинаем игру заново
-const clickOnReplay = function () {
+const handleReplayClick = function () {
   renderScreen(welcome);
 };
 
 // На кнопку "начать заново" навешиваем листенер по клику, который отрисовыет начальный экран
-replay.addEventListener(`click`, clickOnReplay);
+replay.addEventListener(`click`, handleReplayClick);
 
 // Экспортируем экран resultGood
 export default resultGood;

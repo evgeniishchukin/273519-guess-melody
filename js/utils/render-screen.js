@@ -1,9 +1,9 @@
 const appBlock = document.querySelector(`.app`);
 let current = null;
 
-const renderScreen = (temp) => {
+const renderScreen = (template) => {
   current = appBlock.querySelector(`.main`);
-  appBlock.replaceChild(temp, current);
+  appBlock.replaceChild(template, current);
 };
 
 export default renderScreen;
