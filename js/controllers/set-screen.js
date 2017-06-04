@@ -27,14 +27,14 @@ const createStackSong = (quantity) => {
 
 const generateLevelArtist = () => {
   const songs = createStackSong(3);
-  const trueSoung = choiceCurrentAnswer(songs);
-  renderScreen(levelArtist(songs, trueSoung));
+  const trueSong = choiceCurrentAnswer(songs);
+  renderScreen(levelArtist(songs, trueSong));
 };
 
 const generateLevelGenre = () => {
   const songs = createStackSong(4);
-  const trueSoung = choiceCurrentAnswer(songs);
-  renderScreen(levelGenre(songs, trueSoung));
+  const trueSong = choiceCurrentAnswer(songs);
+  renderScreen(levelGenre(songs, trueSong));
 };
 
 const setScreen = (answer) => {
