@@ -1,7 +1,8 @@
 const getElementFromTemplate = (template) => {
   const container = document.createElement(`div`);
   container.innerHTML = template;
-  return container.children[0];
+  const screen = container.querySelector(`.main`);
+  return screen;
 };
 
 export default getElementFromTemplate;

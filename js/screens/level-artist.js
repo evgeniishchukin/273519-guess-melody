@@ -1,64 +1,49 @@
-import getElementFromTemplate from '../utils/get-element-from-template';        // Импортируем модуль с отрисовкой шаблона
-import renderScreen from '../utils/render-screen';                              // Импортируем модуль с отрисовкой экрана
-import levelGenre from './level-genre';                                           // Импортируем модуль с экраном Genre
+import getElementFromTemplate from '../utils/get-element-from-template';
+import setScreen from '../controllers/set-screen';
+import screenTimer from './timer/screen-timer';
 
-// Задаем нужный элемент шаблона в виде строки
-const template = `
-<section class="main main--level main--level-artist">
-  <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
-    <circle
-      cx="390" cy="390" r="370"
-      class="timer-line"
-      style="filter: url(.#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"></circle>
-    <div class="timer-value" xmlns="http://www.w3.org/1999/xhtml">
-      <span class="timer-value-mins">02</span><!--
-      --><span class="timer-value-dots">:</span><!--
-      --><span class="timer-value-secs">00</span>
+export default (songs, trueSongs) => {
+  const templateAnswer = (answer) => `
+    <div class="main-answer-wrapper">
+      <input class="main-answer-r" type="radio" id="${answer.id}" name="answer" value="${answer.value}" />
+      <label class="main-answer" for="${answer.id}">
+        <img class="main-answer-preview" src="${answer.img}">
+        ${answer.name}
+      </label>
+    </div>`;
+
+  const templateMain = `
+  <section class="main main--level main--level-artist">
+    ${screenTimer()}
+    <div class="main-wrap">
+      <h2 class="title main-title">Кто исполняет эту песню?</h2>
+      <div class="player-wrapper">${trueSongs.mp3File}</div>
+      <form class="main-list">
+        ${songs.map((answer) => templateAnswer(answer)).join(``)}
+      </form>
     </div>
-  </svg>
-  <div class="main-wrap">
-    <div class="main-timer"></div>
-    <h2 class="title main-title">Кто исполняет эту песню?</h2>
-    <div class="player-wrapper"></div>
-    <form class="main-list">
-      <div class="main-answer-wrapper">
-        <input class="main-answer-r" type="radio" id="answer-1" name="answer" value="val-1" />
-        <label class="main-answer" for="answer-1">
-          <img class="main-answer-preview" src="">
-          Пелагея
-        </label>
-      </div>
-      <div class="main-answer-wrapper">
-        <input class="main-answer-r" type="radio" id="answer-2" name="answer" value="val-1" />
-        <label class="main-answer" for="answer-2">
-          <img class="main-answer-preview" src="">
-          Краснознаменная дивизия имени моей бабушки
-        </label>
-      </div>
-      <div class="main-answer-wrapper">
-        <input class="main-answer-r" type="radio" id="answer-2" name="answer" value="val-1" />
-        <label class="main-answer" for="answer-2">
-          <img class="main-answer-preview" src="">
-          Lorde
-        </label>
-      </div>
-    </form>
-  </div>
-</section>`;
+  </section>`;
 
-const levelArtist = getElementFromTemplate(template);                               // Переводим шаблон в DOM элемент
+  const levelArtist = getElementFromTemplate(templateMain);
 
-const answers = levelArtist.querySelectorAll(`.main-answer`);                   // Определяем массив возможных ответов
+  const answerCollection = levelArtist.querySelectorAll(`.main-answer-r`);
 
-// Создаем функцию отрсовки следующего по порядку экрана при выборе ответа
-const clickOnAnswer = function () {
-  renderScreen(levelGenre);
+  const checkAnswer = (element) => {
+    const answerID = element.id;
+    const currentID = trueSongs.id;
+    if (answerID === currentID) {
+      setScreen(true);
+    } else {
+      setScreen(false);
+    }
+  };
+  const onClickAnswer = (event) => {
+    checkAnswer(event.target);
+  };
+
+  for (const answer of answerCollection) {
+    answer.addEventListener(`change`, onClickAnswer);
+  }
+
+  return levelArtist;
 };
-
-// Каждому ответу навешиваем листенер по клику с вызвом функции отрисовки
-for (const answer of answers) {
-  answer.addEventListener(`click`, clickOnAnswer);
-}
-
-// Экспортируем экран artist
-export default levelArtist;
