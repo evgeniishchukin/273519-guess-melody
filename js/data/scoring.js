@@ -69,16 +69,16 @@ export default {
     },
     {
       name: `Максим`,
-      value: `val-8`,
-      id: `a-8`,
+      value: `val-9`,
+      id: `a-9`,
       img: `/img/artist.jpg`,
       mp3File: `/mp3/Знаешь ли ты`,
       genre: `Pop`
     },
     {
       name: `Каста`,
-      value: `val-8`,
-      id: `a-8`,
+      value: `val-10`,
+      id: `a-10`,
       img: `/img/artist.jpg`,
       mp3File: `/mp3/Миллиард лет`,
       genre: `Rap`
