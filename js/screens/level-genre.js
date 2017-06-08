@@ -1,86 +1,75 @@
-import getElementFromTemplate from '../utils/get-element-from-template';        // Импортируем модуль с отрисовкой шаблона
-import renderScreen from '../utils/render-screen';                              // Импортируем модуль с отрисовкой экрана
-import getRandomElement from '../utils/get-random-element';                     // Импортируем модуль с выбором рандомного итога
-import resultGood from './result-good';                                         // Импортируем модуль с экраном выигрыша
-import resultBad from './result-bad';                                           // Импортируем модуль с экраном проигрыша
+import timerScreen from './timer/timer-screen';
+import getElementFromTemplate from '../utils/get-element-from-template';
+import setScreen from '../controllers/set-screen';
 
-// Задаем нужный элемент шаблона в виде строки
-const template = `
-<section class="main main--level main--level-genre">
-  <h2 class="title">Выберите инди-рок треки</h2>
-  <form class="genre">
-    <div class="genre-answer">
-      <div class="player-wrapper"></div>
-      <input type="checkbox" name="answer" value="answer-1" id="a-1">
-      <label class="genre-answer-check" for="a-1"></label>
+export default (songs, trueSong) => {
+  const answerTemplate = (song) => `
+  <div class="genre-answer">
+    <div class="player-wrapper">${song.genre}</div>
+    <input type="checkbox" name="answer" value="${song.value}" id="${song.id}">
+    <label class="genre-answer-check" for="${song.id}"></label>
+  </div>`;
+
+  const mainTemplate = `
+  <section class="main main--level main--level-genre">
+    ${timerScreen()}
+    <div class="main-wrap">
+      <h2 class="title main-title">Выберите трек(и) в "${trueSong.genre}" стиле</h2>
+      <form class="genre">
+        ${songs.map(answerTemplate).join(``)}
+        <button class="genre-answer-send" type="submit" disabled>Ответить</button>
+      </form>
     </div>
-    <div class="genre-answer">
-      <div class="player-wrapper"></div>
-      <input type="checkbox" name="answer" value="answer-1" id="a-2">
-      <label class="genre-answer-check" for="a-2"></label>
-    </div>
-    <div class="genre-answer">
-      <div class="player-wrapper"></div>
-      <input type="checkbox" name="answer" value="answer-1" id="a-3">
-      <label class="genre-answer-check" for="a-3"></label>
-    </div>
-    <div class="genre-answer">
-      <div class="player-wrapper"></div>
-      <input type="checkbox" name="answer" value="answer-1" id="a-4">
-      <label class="genre-answer-check" for="a-4"></label>
-    </div>
-    <button class="genre-answer-send" type="submit" disabled>Ответить</button>
-  </form>
-</section>`;
+  </section>`;
 
-const levelGenre = getElementFromTemplate(template);                                // Переводим шаблон в DOM элемент
-const sendAnswerButton = levelGenre.querySelector(`.genre-answer-send`);              // Определяем кнопку отправки ответа
-const possibleAnswers = levelGenre.querySelectorAll(`input[type="checkbox"]`);  // Определяем массив возможных ответов
+  const levelGenre = getElementFromTemplate(mainTemplate);
+  const submitButton = levelGenre.querySelector(`.genre-answer-send`);
+  const checkboxCollection = levelGenre.querySelectorAll(`input[type="checkbox"]`);
 
-// Определяем состояние кнопки с отправкой ответов (если хоть один не выбран, то она отключена)
-const sendAnswerButtonState = (state) => {
-  sendAnswerButton.disabled = !state;
-};
+  const checkAnswers = () => {
 
-// Устанвливаем начальное состояние возможных ответов (ни один не выбран)
-const setInitialAnswerState = () => {
-  for (let answer of possibleAnswers) {
-    answer.checked = false;
-  }
-};
+    const curentAnswers = songs.map((song) => {
+      return song.genre === trueSong.genre;
+    });
 
 
-// Проверяем, выбран ли хоть один ответ и если выбран, то включаем кнопку
-const handleAnswerChange = () => {
-  let answerState = false;
-  for (const answer of possibleAnswers) {
-    if (answer.checked) {
-      answerState = true;
-      break;
+    let valid = false;
+    for (let i = 0; i < checkboxCollection.length; i++) {
+      if (checkboxCollection[i].checked === curentAnswers[i]) {
+        valid = true;
+      } else {
+        valid = false;
+        break;
+      }
     }
+    return valid;
+  };
+
+  const setStateSubmitButton = () => {
+    for (const checkbox of checkboxCollection) {
+      if (checkbox.checked) {
+        submitButton.disabled = false;
+        break;
+      } else {
+        submitButton.disabled = true;
+      }
+    }
+  };
+
+  const onChangeCheckbox = () => {
+    setStateSubmitButton();
+  };
+
+  for (const checkbox of checkboxCollection) {
+    checkbox.addEventListener(`change`, onChangeCheckbox);
   }
-  // Включаем кнопку
-  sendAnswerButtonState(answerState);
+
+  const onClickSendButton = (event) => {
+    event.preventDefault();
+    setScreen(checkAnswers());
+  };
+
+  submitButton.addEventListener(`click`, onClickSendButton);
+
+  return levelGenre;
 };
-
-// Каждому ответу навешиваем листенер изменения с вызвом функции проверки состояния ответов
-for (let answer of possibleAnswers) {
-  answer.addEventListener(`change`, handleAnswerChange);
-}
-
-// Отрисовываем результат
-const handleAnswerSend = (event) => {
-  event.stopPropagation();
-  const result = getRandomElement([resultGood, resultBad]);                     // Выбираем рандомный результат
-  renderScreen(result);
-  setInitialAnswerState();
-
-  // Отключаем кнопку
-  sendAnswerButtonState(false);
-};
-
-// На кнопку отправки ответа навешиваем листенер по клику, который отрисовыет результат
-sendAnswerButton.addEventListener(`click`, handleAnswerSend);
-
-// Экспортируем экран genre
-export default levelGenre;

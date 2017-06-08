@@ -1,5 +1,3 @@
-import welcome from './screens/welcome';                                        // Импортируем модуль welcome
-import renderScreen from './utils/render-screen';                               // Импортируем модуль с отрисовкой шаблона
+import setScreen from './controllers/set-screen';
 
-// Отрисовываем экран welcome
-renderScreen(welcome);
+setScreen();
