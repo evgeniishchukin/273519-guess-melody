@@ -4,8 +4,7 @@ import renderScreen from '../utils/render-screen';
 import welcome from '../screens/welcome';
 import levelArtist from '../screens/level-artist';
 import levelGenre from '../screens/level-genre';
-import resultGood from '../screens/result-good';
-import resultBad from '../screens/result-bad';
+import result from '../screens/result';
 
 const getRandomItem = (array) => {
   const randomIndex = Math.floor(Math.random() * array.length);
@@ -48,9 +47,9 @@ const setScreen = (answer) => {
     return;
   } else if (scoring.curentQuestion > scoring.maxQuestions) {
     if (scoring.totalScore > 0) {
-      renderScreen(resultGood(scoring.totalScore));
+      renderScreen(result(`good`, scoring.totalScore));
     } else {
-      renderScreen(resultBad());
+      renderScreen(result(`bad`));
     }
     scoring.curentQuestion = 0;
   } else {

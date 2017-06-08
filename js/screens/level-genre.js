@@ -35,10 +35,8 @@ export default (songs, trueSong) => {
 
     let valid = false;
     for (let i = 0; i < checkboxCollection.length; i++) {
-      if (checkboxCollection[i].checked === curentAnswers[i]) {
-        valid = true;
-      } else {
-        valid = false;
+      valid = checkboxCollection[i].checked === curentAnswers[i];
+      if (!valid) {
         break;
       }
     }
@@ -47,11 +45,9 @@ export default (songs, trueSong) => {
 
   const setStateSubmitButton = () => {
     for (const checkbox of checkboxCollection) {
-      if (checkbox.checked) {
-        submitButton.disabled = false;
+      submitButton.disabled = !checkbox.checked;
+      if (!submitButton.disabled) {
         break;
-      } else {
-        submitButton.disabled = true;
       }
     }
   };
