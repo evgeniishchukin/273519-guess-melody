@@ -1,31 +1,14 @@
 import getElementFromTemplate from '../utils/get-element-from-template';
-import setScreen from '../controllers/set-screen';
-const resultObj = {
-  Type: ``,
-  Header: ``,
-  Stat: ``,
-  Raring: ``
-};
+import {onRepeatGame} from '../controllers/game-controller';
 
-export default (resultType, totalScore) => {
-  if (resultType === `bad`) {
-    resultObj.Type = `fail`;
-    resultObj.Header = `Вы проиграли`;
-    resultObj.Stat = `Ничего, вам повезет в следующий раз`;
-    resultObj.Rating = ``;
-  } else {
-    resultObj.Type = `success`;
-    resultObj.Header = `Вы настоящий меломан!`;
-    resultObj.Stat = `За&nbsp;2&nbsp;минуты<br>вы&nbsp;отгадали ${totalScore}&nbsp;мелодии`;
-    resultObj.Rating = `Это&nbsp;лучше чем у&nbsp;80%&nbsp;игроков`;
-  }
-
+export default (totalScore, timeLeft, statistics) => {
   const template = `
-  <section class="main main--result main--result-${resultObj.Type}">
+  <section class="main main--result main--result">
     <section class="logo" title="Угадай мелодию"><h1>Угадай мелодию</h1></section>
-    <h2 class="title">${resultObj.Header}</h2>
-    <div class="main-stat">${resultObj.Stat}</div>
-    ${resultObj.Rating}
+    <h2 class="title">Итоговые результаты</h2>
+    <div class="main-stat">Рейтинг игрока</div>
+    Всего секунд: ${timeLeft} <br>Мелодий отгадано ${totalScore}<br>
+    Это&nbsp;лучше чем у&nbsp;${statistics}%&nbsp;игроков
     <span role="button" tabindex="0" class="main-replay">Сыграть ещё раз</span>
   </section>`;
 
@@ -34,7 +17,7 @@ export default (resultType, totalScore) => {
   const replayButton = result.querySelector(`.main-replay`);
 
   const onClickReplayButton = () => {
-    setScreen();
+    onRepeatGame();
   };
 
   replayButton.addEventListener(`click`, onClickReplayButton);

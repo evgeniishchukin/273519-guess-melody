@@ -1,8 +1,9 @@
 import timerScreen from './timer/timer-screen';
 import getElementFromTemplate from '../utils/get-element-from-template';
-import setScreen from '../controllers/set-screen';
+import {onQuestionAnswered} from '../controllers/game-controller';
+import getTimeFromScreen from '../utils/get-time-from-screen';
 
-export default (songs, trueSong) => {
+export default (songs, trueSong, timeLeft) => {
   const answerTemplate = (song) => `
   <div class="genre-answer">
     <div class="player-wrapper">${song.genre}</div>
@@ -12,7 +13,7 @@ export default (songs, trueSong) => {
 
   const mainTemplate = `
   <section class="main main--level main--level-genre">
-    ${timerScreen()}
+    ${timerScreen(timeLeft)}
     <div class="main-wrap">
       <h2 class="title main-title">Выберите трек(и) в "${trueSong.genre}" стиле</h2>
       <form class="genre">
@@ -62,7 +63,7 @@ export default (songs, trueSong) => {
 
   const onClickSendButton = (event) => {
     event.preventDefault();
-    setScreen(checkAnswers());
+    onQuestionAnswered(checkAnswers(), getTimeFromScreen());
   };
 
   submitButton.addEventListener(`click`, onClickSendButton);

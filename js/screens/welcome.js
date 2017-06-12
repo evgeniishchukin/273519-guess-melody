@@ -1,4 +1,4 @@
-import setScreen from '../controllers/set-screen';
+import {startGame} from '../controllers/game-controller';
 import getElementFromTemplate from '../utils/get-element-from-template';
 
 export default () => {
@@ -19,7 +19,7 @@ export default () => {
   const playGameButton = welcome.querySelector(`.main-play`);
 
   const onClickButton = () => {
-    setScreen();
+    startGame();
   };
 
   playGameButton.addEventListener(`click`, onClickButton);

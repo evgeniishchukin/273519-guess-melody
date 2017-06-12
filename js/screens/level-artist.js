@@ -1,8 +1,9 @@
 import getElementFromTemplate from '../utils/get-element-from-template';
-import setScreen from '../controllers/set-screen';
+import {onQuestionAnswered} from '../controllers/game-controller';
 import timerScreen from './timer/timer-screen';
+import getTimeFromScreen from '../utils/get-time-from-screen';
 
-export default (songs, trueSong) => {
+export default (songs, trueSong, timeLeft) => {
   const answerTemplate = (answer) => `
     <div class="main-answer-wrapper">
       <input class="main-answer-r" type="radio" id="${answer.id}" name="answer" value="${answer.value}" />
@@ -14,7 +15,7 @@ export default (songs, trueSong) => {
 
   const mainTemplate = `
   <section class="main main--level main--level-artist">
-    ${timerScreen()}
+    ${timerScreen(timeLeft)}
     <div class="main-wrap">
       <h2 class="title main-title">Кто исполняет эту песню?</h2>
       <div class="player-wrapper">${trueSong.mp3File}</div>
@@ -31,7 +32,8 @@ export default (songs, trueSong) => {
   const checkAnswer = (element) => {
     const answerId = element.id;
     const currentId = trueSong.id;
-    setScreen(answerId === currentId);
+
+    onQuestionAnswered((answerId === currentId), getTimeFromScreen());
   };
 
   const onAnswerClick = (event) => {

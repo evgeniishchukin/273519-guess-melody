@@ -1,3 +1,3 @@
-import setScreen from './controllers/set-screen';
+import {setWelcomeScreen} from './controllers/game-controller';
 
-setScreen();
+setWelcomeScreen();
