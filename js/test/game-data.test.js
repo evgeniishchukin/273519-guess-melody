@@ -14,7 +14,7 @@ describe(`Game Logic Test`, () => {
     gameModel.questions = deepCopy(questions);
   });
 
-  it(`All answers correct, game should be succeas`, () => {
+  it(`All answers correct, game should be succsess`, () => {
     questions.forEach((item, i, array) => {
       switch (item.type) {
         case gameModel.GENRE_QUESTION_TYPE:
