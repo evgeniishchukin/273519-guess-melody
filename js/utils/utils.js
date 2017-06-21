@@ -23,6 +23,24 @@ export const shuffleArray = (array) => {
   return array;
 };
 
+export const getRandomElement = (array) => {
+  const number = Math.round(Math.random() * (array.length - 1));
+  return array[number];
+};
+
 export const deepCopy = (object) => {
   return JSON.parse(JSON.stringify(object));
+};
+
+export const getTimeString = (timeStat) => {
+  const time = timeStat;
+
+  const mins = Math.floor(time / 60);
+  const secs = time - (mins * 60);
+
+  if (mins) {
+    return `${mins} минуты ${secs} секунды`;
+  } else {
+    return `${secs} секунды`;
+  }
 };
