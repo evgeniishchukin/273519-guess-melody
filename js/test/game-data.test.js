@@ -44,7 +44,7 @@ describe(`Game Logic Test`, () => {
     assert.equal(true, gameModel.isFail);
   });
 
-  it(`All answers incorrect, lifes should be 0`, () => {
+  it(`All answers incorrect, lives should be 0`, () => {
     questions.forEach((item, i, array) => {
       switch (item.type) {
         case gameModel.QuestionType.GENRE:
@@ -56,7 +56,7 @@ describe(`Game Logic Test`, () => {
       }
     });
 
-    assert.equal(0, gameModel.lifes);
+    assert.equal(0, gameModel.lives);
   });
 
   it(`Time left, game should be fail`, () => {

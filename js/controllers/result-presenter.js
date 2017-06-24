@@ -2,29 +2,23 @@ import SuccessView from '../views/result-success-view.js';
 import FailView from '../views/result-fail-view.js';
 import application from '../application/application.js';
 import {initStat} from '../data/data.js';
+import {show} from '../utils/utils.js';
 
 class ResultPresenter {
   constructor() {
     this.initStatistics = Object.assign([], initStat);
   }
 
-  show(element) {
-    const mainScreen = document.querySelector(`.main`);
-    mainScreen.innerHTML = ``;
-    mainScreen.appendChild(element);
-  }
-
   init(stats) {
     if (stats) {
       stats.percentHighscore = this.getPercentHighscore(stats.correctAnswers, stats.time);
-
       this.view = new SuccessView(stats);
     } else {
       this.view = new FailView();
     }
 
     this.view.getMarkup();
-    this.show(this.view.element);
+    show(this.view.element);
 
     this.view.onRestartClick = () => {
       location.hash = application.ControllerId.WELCOME;

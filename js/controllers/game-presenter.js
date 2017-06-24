@@ -2,18 +2,12 @@ import GenreView from '../views/game-genre-view.js';
 import ArtistView from '../views/game-artist-view.js';
 import gameModel from '../models/game-model.js';
 import application from '../application/application.js';
+import {show} from '../utils/utils.js';
 
 class GamePresenter {
 
   constructor(model) {
     this.model = model;
-
-  }
-
-  show(element) {
-    const mainScreen = document.querySelector(`.main`);
-    mainScreen.innerHTML = ``;
-    mainScreen.appendChild(element);
   }
 
   init() {
@@ -34,7 +28,7 @@ class GamePresenter {
     }
 
     this.view.getMarkup();
-    this.show(this.view.element);
+    show(this.view.element);
     this.view.onAnswer = (...answerIndexes) => this.model.answer(...answerIndexes);
 
     this.model.onNextQuestion = () => {
@@ -50,7 +44,6 @@ class GamePresenter {
 
       this.destroy();
     };
-
   }
 
   destroy() {

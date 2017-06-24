@@ -1,6 +1,7 @@
 import welcome from '../controllers/welcome-presenter.js';
 import game from '../controllers/game-presenter.js';
 import result from '../controllers/result-presenter.js';
+import model from '../models/game-model.js';
 
 class Application {
   constructor() {
@@ -10,16 +11,30 @@ class Application {
       RESULT: `result`
     };
 
+    window.onhashchange = () => {
+      this.initLocation();
+    };
+
+    const preloaderRemove = this.showWelcome;
+
+    model.load()
+      .then((data) => this.setup(data))
+      .then(preloaderRemove)
+      .then(() => this.initLocation())
+      .catch(window.console.error);
+
     this.routes = {
       [this.ControllerId.WELCOME]: welcome,
       [this.ControllerId.GAME]: game,
       [this.ControllerId.RESULT]: result
     };
-
-    window.onhashchange = () => {
-      this.initLocation();
-    };
   }
+
+  setup(questions) {
+    model.questions = questions;
+  }
+
+  init() {}
 
   showWelcome() {
     welcome.init();
@@ -35,21 +50,22 @@ class Application {
   }
 
   getRawHashString(hash) {
-
+    const index = hash.indexOf(`=`);
     let returnString = hash.replace(`#`, ``);
-    if (~returnString.indexOf(`=`)) {
-      returnString = returnString.substring(0, returnString.indexOf(`=`));
+    if (index > 0) {
+      returnString = returnString.substr(0, index);
     }
 
     return returnString;
   }
 
   getJSONHashString(hash) {
-    let returnString = hash.replace(`#`, ``);
-    if (~returnString.indexOf(`=`)) {
-      returnString = returnString.substring(returnString.indexOf(`=`) + 1);
-    }
+    const index = hash.indexOf(`=`);
 
+    let returnString = hash.replace(`#`, ``);
+    if (index > 0) {
+      returnString = returnString.substr(index + 1);
+    }
     try {
       return JSON.parse(returnString);
     } catch (error) {
@@ -58,21 +74,16 @@ class Application {
   }
 
   changeController(route = ``, params) {
+
     const controller = this.routes[route];
     game.destroy();
 
     if (controller) {
-      if (params) {
-        controller.init(params);
-      } else {
-        controller.init();
-      }
+      controller.init(params);
     } else {
       this.showWelcome();
     }
   }
 }
 
-const application = new Application();
-
-export default application;
+export default new Application();
