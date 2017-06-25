@@ -44,3 +44,9 @@ export const getTimeString = (timeStat) => {
     return `${secs} секунды`;
   }
 };
+
+export const show = (element) => {
+  const mainScreen = document.querySelector(`.main`);
+  mainScreen.innerHTML = ``;
+  mainScreen.appendChild(element);
+};

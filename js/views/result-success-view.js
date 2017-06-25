@@ -1,5 +1,5 @@
 import AbstractView from '../views/abstract-view.js';
-import * as data from '../data/data.js';
+import {gameInfo} from '../data/data.js';
 import {getTimeString} from '../utils/utils.js';
 
 export default class ResultFailView extends AbstractView {
@@ -12,7 +12,7 @@ export default class ResultFailView extends AbstractView {
 
   get template() {
     return `<section class="main main--result">
-    <section class="logo" title="${data.gameInfo.gameName}"><h1>${data.gameInfo.gameName}</h1></section>
+    <section class="logo" title="${gameInfo.gameName}"><h1>${gameInfo.gameName}</h1></section>
     <h2 class="title">Вы настоящий меломан!</h2>
     <div class="main-stat">За&nbsp;${getTimeString(this.stats.time)}<br>вы&nbsp;отгадали ${this.stats.correctAnswers}&nbsp;мелодии</div>
     <span class="main-comparison">Это&nbsp;лучше чем у&nbsp;${this.stats.percentHighscore}&nbsp;игроков</span>

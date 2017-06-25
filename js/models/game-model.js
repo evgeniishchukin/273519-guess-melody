@@ -1,8 +1,62 @@
-import {getTempData} from '../data/questions-production.js';
+import dataModel from './data-model.js';
+import {dataAdapter} from './data-model.js';
 import {deepCopy} from '../utils/utils.js';
 import {initialState} from '../data/data.js';
 
-class GameModel {
+const gameModelAdapter = new class extends dataAdapter {
+  constructor() {
+    super();
+  }
+
+  preprocess(data) {
+    return data.map((item) => {
+      switch (item.type) {
+        case `artist`:
+          return {type: 1, data: {file: item.src}, answers: gameModelAdapter.proceedArtistAnswers(item.answers)};
+        case `genre`:
+          return {type: 2, data: item.question, answers: gameModelAdapter.proceedGenreAnswers(item.answers, item.genre)};
+      }
+
+      return {};
+    });
+  }
+
+  toServer(data) {
+    return JSON.stringify(data);
+  }
+
+  proceedArtistAnswers(answers) {
+    return answers.map((item) => {
+      return {valid: item.isCorrect, artistName: item.title, image: item.image.url};
+    });
+  }
+
+  proceedGenreAnswers(answers, correctGenre) {
+    return answers.map((item) => {
+      return {valid: item.genre === correctGenre ? true : false, file: item.src};
+    });
+  }
+}();
+
+class GameModel extends dataModel {
+
+  constructor() {
+    super();
+
+    this.QuestionType = {
+      ARTIST: 1,
+      GENRE: 2
+    };
+
+    this.questions = [];
+    this.initState = deepCopy(initialState);
+    this.initState.questions = deepCopy(this.questions);
+    this.state = Object.assign({}, this.initState);
+  }
+
+  get urlRead() {
+    return `https://intensive-ecmascript-server-btfgudlkpi.now.sh/guess-melody/questions`;
+  }
 
   get correctAnswers() {
     return this.state.questions.reduce((sum, question) => {
@@ -21,12 +75,13 @@ class GameModel {
       this.onFinishGame();
     }
   }
+
   get timeLeft() {
     return this.state.time;
   }
 
-  get lifes() {
-    return this.state.lifes;
+  get lives() {
+    return this.state.lives;
   }
 
   get currentQuestion() {
@@ -42,19 +97,7 @@ class GameModel {
   }
 
   get isFail() {
-    return !this.timeLeft || !this.lifes;
-  }
-
-  constructor() {
-    this.QuestionType = {
-      ARTIST: 1,
-      GENRE: 2
-    };
-
-    this.questions = getTempData();
-    this.initState = Object.assign({}, initialState);
-    this.initState.questions = deepCopy(this.questions);
-    this.state = Object.assign({}, this.initState);
+    return !this.timeLeft || !this.lives;
   }
 
   resetGame() {
@@ -66,8 +109,10 @@ class GameModel {
     if (this.currentQuestion.isUserAnswerCorrect) {
       this.nextQuestion();
     } else {
-      this.state.lifes = Math.max(0, this.state.lifes - 1);
-      if (this.state.lifes < 1) {
+      this.state.lives = Math.max(0, this.state.lives - 1);
+
+
+      if (this.state.lives < 1) {
         this.onFinishGame();
       } else {
         this.nextQuestion();
@@ -87,15 +132,12 @@ class GameModel {
 
   proceedCurrentAnswer(answerIndexes) {
     const answers = this.currentQuestion.answers;
-
     answerIndexes.forEach((item) => {
       answers[item].isUserAnswer = true;
     });
 
-    let correct = !(answers.findIndex((item, i) => item.valid && !item.isUserAnswer || !item.valid && item.isUserAnswer) !== -1);
-
+    let correct = answers.findIndex((item, i) => item.isValid && !item.isUserAnswer || !item.isValid && item.isUserAnswer) <= 0;
     this.currentQuestion.isUserAnswerCorrect = correct;
-
     return correct;
   }
 
@@ -105,6 +147,10 @@ class GameModel {
 
   onNextQuestion() {
 
+  }
+
+  load() {
+    return super.load(gameModelAdapter);
   }
 }
 

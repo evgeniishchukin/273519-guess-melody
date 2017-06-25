@@ -13,7 +13,7 @@ export default class GameGenreView extends AbstractView {
     return `<section class="main main--level main--level-genre">
     ${timer()}
     <div class="main-wrap">
-      <h2 class="title">Выберите ${this.question.data.description.toLowerCase()} треки</h2>
+      <h2 class="title">Выберите ${this.question.data.toLowerCase()}</h2>
       <form class="genre">
         ${[...this.question.answers].map((answer, index) =>
            this.createSong(index, answer)
