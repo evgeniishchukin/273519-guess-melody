@@ -1,32 +1,27 @@
 import welcome from '../controllers/welcome-presenter.js';
 import game from '../controllers/game-presenter.js';
 import result from '../controllers/result-presenter.js';
+import resultModel from '../models/result-model.js';
 import model from '../models/game-model.js';
 
-class Application {
+
+const ControllerId = {
+  WELCOME: ``,
+  GAME: `game`,
+  RESULT: `result`
+};
+
+export default class Application {
   constructor() {
-    this.ControllerId = {
-      WELCOME: ``,
-      GAME: `game`,
-      RESULT: `result`
-    };
 
     window.onhashchange = () => {
       this.initLocation();
     };
 
-    const preloaderRemove = this.showWelcome;
-
-    model.load()
-      .then((data) => this.setup(data))
-      .then(preloaderRemove)
-      .then(() => this.initLocation())
-      .catch(window.console.error);
-
     this.routes = {
-      [this.ControllerId.WELCOME]: welcome,
-      [this.ControllerId.GAME]: game,
-      [this.ControllerId.RESULT]: result
+      [ControllerId.WELCOME]: welcome,
+      [ControllerId.GAME]: game,
+      [ControllerId.RESULT]: result
     };
   }
 
@@ -34,14 +29,42 @@ class Application {
     model.questions = questions;
   }
 
-  init() {}
+  init() {
+    model.load()
+      .then((data) => this.setup(data))
+      .then(() => {
+        return resultModel.load();
+      })
+      .then((stats) => {
+        resultModel.stats = stats;
+      })
+      .then(() => this.initLocation())
+      .catch(window.console.error);
+  }
 
-  showWelcome() {
+  static welcomeScreen() {
+    location.hash = ControllerId.WELCOME;
+  }
+
+  static showWelcome() {
     welcome.init();
   }
 
-  showGame() {
+  static gameScreen() {
+    location.hash = ControllerId.GAME;
+  }
+
+  static showGame() {
     game.init();
+  }
+
+  static showResult(finResult) {
+    location.hash = ControllerId.RESULT;
+    if (finResult) {
+      location.hash = ControllerId.RESULT;
+    } else {
+      location.hash = `${ControllerId.RESULT}=${JSON.stringify(model.stats)}`;
+    }
   }
 
   initLocation() {
@@ -50,12 +73,12 @@ class Application {
   }
 
   getRawHashString(hash) {
-    const index = hash.indexOf(`=`);
     let returnString = hash.replace(`#`, ``);
-    if (index > 0) {
-      returnString = returnString.substr(0, index);
-    }
 
+    const index = hash.indexOf(`=`);
+    if (index > 0) {
+      returnString = returnString.substr(0, index - 1);
+    }
     return returnString;
   }
 
@@ -64,7 +87,7 @@ class Application {
 
     let returnString = hash.replace(`#`, ``);
     if (index > 0) {
-      returnString = returnString.substr(index + 1);
+      returnString = returnString.substr(index);
     }
     try {
       return JSON.parse(returnString);
@@ -74,16 +97,12 @@ class Application {
   }
 
   changeController(route = ``, params) {
-
     const controller = this.routes[route];
     game.destroy();
-
     if (controller) {
       controller.init(params);
     } else {
-      this.showWelcome();
+      welcome.init();
     }
   }
 }
-
-export default new Application();

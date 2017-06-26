@@ -1,38 +1,39 @@
 import SuccessView from '../views/result-success-view.js';
 import FailView from '../views/result-fail-view.js';
 import application from '../application/application.js';
-import {initStat} from '../data/data.js';
+import resultModel from '../models/result-model.js';
 import {show} from '../utils/utils.js';
 
 class ResultPresenter {
-  constructor() {
-    this.initStatistics = Object.assign([], initStat);
-  }
-
   init(stats) {
     if (stats) {
-      stats.percentHighscore = this.getPercentHighscore(stats.correctAnswers, stats.time);
-      this.view = new SuccessView(stats);
+      resultModel.send(stats);
+      this.view = new SuccessView(Object.assign({}, stats, {percentHighscore: this.getPercentHighscore(stats)}));
+
     } else {
       this.view = new FailView();
     }
 
-    this.view.getMarkup();
     show(this.view.element);
 
     this.view.onRestartClick = () => {
-      location.hash = application.ControllerId.WELCOME;
+      location.reload();
+      application.welcomeScreen();
     };
   }
 
-  getPercentHighscore(correctAnswers, time) {
-    this.initStatistics.push({answers: correctAnswers, time, isPlayerResult: true});
+  getPercentHighscore(stats) {
+    stats.isPlayerResult = true;
 
-    this.initStatistics.sort((a, b) => {
-      return b.answers - a.answers || a.time - b.time;
+    const commonStats = resultModel.stats;
+
+    commonStats.push(stats);
+
+    commonStats.sort((a, b) => {
+      return b.answers - a.answers;
     });
 
-    const playerIndex = this.initStatistics.findIndex((item) => {
+    const playerIndex = commonStats.findIndex((item) => {
       if (item.isPlayerResult) {
         delete item.isPlayerResult;
         return true;
@@ -40,8 +41,7 @@ class ResultPresenter {
 
       return false;
     });
-
-    const result = 100 - ((playerIndex + 1) / this.initStatistics.length) * 100;
+    const result = 100 - (playerIndex / commonStats.length) * 100;
     return Math.floor(result) + `%`;
   }
 }

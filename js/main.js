@@ -1,3 +1,3 @@
-import application from './application/application.js';
+import Application from './application/application.js';
 
-application.initLocation();
+new Application().init();

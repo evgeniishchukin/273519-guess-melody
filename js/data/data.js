@@ -7,8 +7,8 @@ export const initStat = Object.freeze([
 ]);
 
 export const initialState = Object.freeze({
-  'time': 120,
-  'lives': 3,
+  'time': 600,
+  'lives': 10,
   'currentIndex': 0,
 });
 
@@ -18,3 +18,5 @@ export const gameInfo = Object.freeze({
   максимальное количество правильных ответов.<br>
   Удачи!`
 });
+
+export const USERNAME = `evgeniyshchukin273519`;

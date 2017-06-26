@@ -8,10 +8,9 @@ class WelcomePresenter {
   }
 
   init() {
-    this.view.getMarkup();
     show(this.view.element);
     this.view.onStartClick = () => {
-      location.hash = application.ControllerId.GAME;
+      application.gameScreen();
     };
   }
 }
