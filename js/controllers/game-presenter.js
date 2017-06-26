@@ -27,21 +27,19 @@ class GamePresenter {
         break;
     }
 
-    this.view.getMarkup();
     show(this.view.element);
     this.view.onAnswer = (...answerIndexes) => this.model.answer(...answerIndexes);
 
     this.model.onNextQuestion = () => {
-      application.showGame();
+      if (this.model.state.currentIndex === 0) {
+        application.gameScreen();
+      } else {
+        application.showGame();
+      }
     };
 
     this.model.onFinishGame = () => {
-      if (this.model.isFail) {
-        location.hash = application.ControllerId.RESULT;
-      } else {
-        location.hash = `${application.ControllerId.RESULT}=${JSON.stringify(this.model.stats)}`;
-      }
-
+      application.showResult(this.model.isFail);
       this.destroy();
     };
   }

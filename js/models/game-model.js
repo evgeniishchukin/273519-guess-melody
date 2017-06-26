@@ -92,7 +92,6 @@ class GameModel extends dataModel {
     const stats = {};
     stats.correctAnswers = this.correctAnswers;
     stats.time = this.gameTime;
-
     return stats;
   }
 
@@ -110,7 +109,6 @@ class GameModel extends dataModel {
       this.nextQuestion();
     } else {
       this.state.lives = Math.max(0, this.state.lives - 1);
-
 
       if (this.state.lives < 1) {
         this.onFinishGame();
@@ -136,7 +134,7 @@ class GameModel extends dataModel {
       answers[item].isUserAnswer = true;
     });
 
-    let correct = answers.findIndex((item, i) => item.isValid && !item.isUserAnswer || !item.isValid && item.isUserAnswer) <= 0;
+    let correct = answers.findIndex((item, i) => item.valid && !item.isUserAnswer || !item.valid && item.isUserAnswer) <= 0;
     this.currentQuestion.isUserAnswerCorrect = correct;
     return correct;
   }
