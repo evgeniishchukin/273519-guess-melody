@@ -29,7 +29,10 @@ class GamePresenter {
     }
 
     show(this.view.element);
-    this.view.onAnswer = (...answerIndexes) => this.answer(...answerIndexes);
+    this.view.onAnswer = (...answerIndexes) => {
+      this.answer(...answerIndexes);
+      this.chooseScreen();
+    };
   }
 
   destroy() {
@@ -69,10 +72,6 @@ class GamePresenter {
 
   set timeLeft(value) {
     this.model.state.time = value;
-
-    if (!this.model.state.time) {
-      this.onFinishGame();
-    }
   }
 
   get timeLeft() {
@@ -109,16 +108,17 @@ class GamePresenter {
   }
 
   answer(...selectedIndexes) {
-    this.proceedCurrentAnswer(selectedIndexes);
-    if (this.currentQuestion.isUserAnswerCorrect) {
-      this.nextQuestion();
-    } else {
+    const correct = this.proceedCurrentAnswer(selectedIndexes);
+    if (!correct) {
       this.model.state.lives = Math.max(0, this.model.state.lives - 1);
-      if (this.model.state.lives < 1) {
-        this.onFinishGame();
-      } else {
-        this.nextQuestion();
-      }
+    }
+  }
+
+  chooseScreen() {
+    if (this.model.state.lives < 1 || this.model.state.time < 0) {
+      this.onFinishGame();
+    } else {
+      this.nextQuestion();
     }
   }
 
