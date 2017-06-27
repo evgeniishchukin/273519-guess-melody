@@ -1,13 +1,13 @@
 import SuccessView from '../views/result-success-view.js';
 import FailView from '../views/result-fail-view.js';
 import application from '../application/application.js';
-import resultModel from '../models/result-model.js';
+import statisticsModel from '../models/statistics-model.js';
 import {show} from '../utils/utils.js';
 
 class ResultPresenter {
   init(stats) {
     if (stats) {
-      resultModel.send(stats);
+      statisticsModel.send(stats);
       this.view = new SuccessView(Object.assign({}, stats, {percentHighscore: this.getPercentHighscore(stats)}));
 
     } else {
@@ -25,12 +25,12 @@ class ResultPresenter {
   getPercentHighscore(stats) {
     stats.isPlayerResult = true;
 
-    const commonStats = resultModel.stats;
+    const commonStats = statisticsModel.stats;
 
     commonStats.push(stats);
 
     commonStats.sort((a, b) => {
-      return b.answers - a.answers;
+      return b.answers - a.answers || a.time - b.time;
     });
 
     const playerIndex = commonStats.findIndex((item) => {
