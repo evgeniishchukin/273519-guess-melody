@@ -7,8 +7,8 @@ export const initStat = Object.freeze([
 ]);
 
 export const initialState = Object.freeze({
-  'time': 600,
-  'lives': 10,
+  'time': 120,
+  'lives': 3,
   'currentIndex': 0,
 });
 

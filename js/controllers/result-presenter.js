@@ -1,36 +1,46 @@
 import SuccessView from '../views/result-success-view.js';
 import FailView from '../views/result-fail-view.js';
 import application from '../application/application.js';
-import resultModel from '../models/result-model.js';
+import statisticsModel from '../models/statistics-model.js';
 import {show} from '../utils/utils.js';
 
 class ResultPresenter {
-  init(stats) {
-    if (stats) {
-      resultModel.send(stats);
-      this.view = new SuccessView(Object.assign({}, stats, {percentHighscore: this.getPercentHighscore(stats)}));
+  init(params) {
 
-    } else {
-      this.view = new FailView();
-    }
+    statisticsModel.send(params);
 
-    show(this.view.element);
-
-    this.view.onRestartClick = () => {
-      location.reload();
-      application.welcomeScreen();
-    };
+    statisticsModel.load()
+      .then((stats) => {
+        statisticsModel.stats = stats;
+      })
+      .then(() => {
+        if (params) {
+          this.view = new SuccessView(Object.assign({}, params, {percentHighscore: this.getPercentHighscore(params)}));
+        } else {
+          this.view = new FailView();
+        }
+      })
+      .then(() => {
+        show(this.view.element);
+      })
+      .then(() => {
+        this.view.onRestartClick = () => {
+          location.reload();
+          application.welcomeScreen();
+        };
+      })
+      .catch(window.console.error);
   }
 
-  getPercentHighscore(stats) {
-    stats.isPlayerResult = true;
+  getPercentHighscore(params) {
+    params.isPlayerResult = true;
 
-    const commonStats = resultModel.stats;
+    const commonStats = statisticsModel.stats;
 
-    commonStats.push(stats);
+    commonStats.push(params);
 
     commonStats.sort((a, b) => {
-      return b.answers - a.answers;
+      return b.answers - a.answers || a.time - b.time;
     });
 
     const playerIndex = commonStats.findIndex((item) => {

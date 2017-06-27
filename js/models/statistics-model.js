@@ -17,7 +17,7 @@ const resultAdapter = new class extends dataAdapter {
   }
 }();
 
-class ResultModel extends dataModel {
+class StatisticsModel extends dataModel {
   constructor() {
     super();
 
@@ -25,11 +25,11 @@ class ResultModel extends dataModel {
   }
 
   get urlRead() {
-    return `https://intensive-ecmascript-server-btfgudlkpi.now.sh/guess-melody/stats/${USERNAME}`;
+    return `https://intensive-ecmascript-server-wbcouextsi.now.sh/guess-melody/stats/${USERNAME}`;
   }
 
   get urlWrite() {
-    return `https://intensive-ecmascript-server-btfgudlkpi.now.sh/guess-melody/stats/${USERNAME}`;
+    return `https://intensive-ecmascript-server-wbcouextsi.now.sh/guess-melody/stats/${USERNAME}`;
   }
 
   send(data) {
@@ -41,4 +41,4 @@ class ResultModel extends dataModel {
   }
 }
 
-export default new ResultModel();
+export default new StatisticsModel();

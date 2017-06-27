@@ -1,7 +1,6 @@
 import welcome from '../controllers/welcome-presenter.js';
 import game from '../controllers/game-presenter.js';
 import result from '../controllers/result-presenter.js';
-import resultModel from '../models/result-model.js';
 import model from '../models/game-model.js';
 
 
@@ -32,12 +31,6 @@ export default class Application {
   init() {
     model.load()
       .then((data) => this.setup(data))
-      .then(() => {
-        return resultModel.load();
-      })
-      .then((stats) => {
-        resultModel.stats = stats;
-      })
       .then(() => this.initLocation())
       .catch(window.console.error);
   }
@@ -63,7 +56,7 @@ export default class Application {
     if (finResult) {
       location.hash = ControllerId.RESULT;
     } else {
-      location.hash = `${ControllerId.RESULT}=${JSON.stringify(model.stats)}`;
+      location.hash = `${ControllerId.RESULT}=${JSON.stringify(game.stats)}`;
     }
   }
 
