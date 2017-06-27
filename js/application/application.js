@@ -1,7 +1,6 @@
 import welcome from '../controllers/welcome-presenter.js';
 import game from '../controllers/game-presenter.js';
 import result from '../controllers/result-presenter.js';
-import statisticsModel from '../models/statistics-model.js';
 import model from '../models/game-model.js';
 
 
@@ -94,17 +93,7 @@ export default class Application {
     const controller = this.routes[route];
     game.destroy();
     if (controller) {
-      if (route === `result`) {
-        statisticsModel.load()
-          .then((stats) => {
-            statisticsModel.stats = stats;
-          })
-          .catch(window.console.error);
-
-        controller.init(params);
-      } else {
-        controller.init();
-      }
+      controller.init(params);
     } else {
       welcome.init();
     }

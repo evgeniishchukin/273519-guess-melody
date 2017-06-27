@@ -10,19 +10,19 @@ const questions = [artistQuestion, genreQuestion, artistQuestion, artistQuestion
 describe(`Game Logic Test`, () => {
   gameModel.questions = deepCopy(questions);
 
-  beforeEach(function () {
+  beforeEach(() => {
     gamePresenter.resetGame();
     gameModel.questions = deepCopy(questions);
   });
 
   it(`All answers correct, game should be success`, () => {
-    questions.forEach((item) => {
+    gameModel.questions.forEach((item) => {
       switch (item.type) {
         case gameModel.QuestionType.GENRE:
-          gamePresenter.answer(0, 1);
+          gamePresenter.answer([0, 1]);
           break;
         case gameModel.QuestionType.ARTIST:
-          gamePresenter.answer(0);
+          gamePresenter.answer([0]);
           break;
       }
     });
@@ -31,13 +31,13 @@ describe(`Game Logic Test`, () => {
   });
 
   it(`All answers incorrect, game should be fail`, () => {
-    questions.forEach((item, i, array) => {
+    questions.forEach((item) => {
       switch (item.type) {
         case gameModel.QuestionType.GENRE:
-          gamePresenter.answer(2);
+          gamePresenter.answer([2]);
           break;
         case gameModel.QuestionType.ARTIST:
-          gamePresenter.answer(1);
+          gamePresenter.answer([1]);
           break;
       }
     });
@@ -46,13 +46,13 @@ describe(`Game Logic Test`, () => {
   });
 
   it(`All answers incorrect, lives should be 0`, () => {
-    questions.forEach((item, i, array) => {
+    questions.forEach((item) => {
       switch (item.type) {
         case gameModel.QuestionType.GENRE:
-          gamePresenter.answer(2);
+          gamePresenter.answer([2]);
           break;
         case gameModel.QuestionType.ARTIST:
-          gamePresenter.answer(1);
+          gamePresenter.answer([1]);
           break;
       }
     });

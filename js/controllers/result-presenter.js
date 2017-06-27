@@ -5,10 +5,16 @@ import statisticsModel from '../models/statistics-model.js';
 import {show} from '../utils/utils.js';
 
 class ResultPresenter {
-  init(stats) {
-    if (stats) {
-      statisticsModel.send(stats);
-      this.view = new SuccessView(Object.assign({}, stats, {percentHighscore: this.getPercentHighscore(stats)}));
+  init(params) {
+    statisticsModel.load()
+      .then((stats) => {
+        statisticsModel.stats = stats;
+      })
+      .catch(window.console.error);
+
+    if (params) {
+      statisticsModel.send(params);
+      this.view = new SuccessView(Object.assign({}, params, {percentHighscore: this.getPercentHighscore(params)}));
 
     } else {
       this.view = new FailView();
@@ -22,12 +28,12 @@ class ResultPresenter {
     };
   }
 
-  getPercentHighscore(stats) {
-    stats.isPlayerResult = true;
+  getPercentHighscore(params) {
+    params.isPlayerResult = true;
 
     const commonStats = statisticsModel.stats;
 
-    commonStats.push(stats);
+    commonStats.push(params);
 
     commonStats.sort((a, b) => {
       return b.answers - a.answers || a.time - b.time;
