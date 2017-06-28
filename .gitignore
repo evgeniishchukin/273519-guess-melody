@@ -4,6 +4,7 @@
 *.log
 *.pdf
 *.psd
+package-lock.json
 *.sublime*
 build/
 node_modules/
