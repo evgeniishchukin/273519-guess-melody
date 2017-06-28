@@ -1,4 +1,4 @@
-import AbstractView from '../views/abstract-view.js';
+import AbstractView from './abstract-view.js';
 import {gameInfo} from '../data/data.js';
 import {getTimeString} from '../utils/utils.js';
 

@@ -1,6 +1,4 @@
-import * as gameData from '../data/data.js';
-
-const screenTemplate = (gameInfo) => `
+const screenTemplate = () => `
   <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
     <circle
     cx="390" cy="390" r="370"
@@ -15,5 +13,5 @@ const screenTemplate = (gameInfo) => `
   </svg>`;
 
 export default function getHtml() {
-  return screenTemplate(gameData);
+  return screenTemplate();
 }

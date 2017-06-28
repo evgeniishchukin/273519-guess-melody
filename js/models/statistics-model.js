@@ -33,7 +33,7 @@ class StatisticsModel extends dataModel {
   }
 
   send(data) {
-    super.send(data, resultAdapter);
+    return super.send(data, resultAdapter);
   }
 
   load() {
