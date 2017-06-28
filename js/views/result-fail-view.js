@@ -1,4 +1,4 @@
-import AbstractView from '../views/abstract-view.js';
+import AbstractView from './abstract-view.js';
 import {gameInfo} from '../data/data.js';
 
 export default class ResultFailView extends AbstractView {

@@ -1,5 +1,5 @@
-import AbstractView from '../views/abstract-view.js';
-import timer from '../views/timer-view';
+import AbstractView from './abstract-view.js';
+import timer from './timer-view';
 
 export default class GameGenreView extends AbstractView {
 

@@ -6,8 +6,9 @@ import {show} from '../utils/utils.js';
 
 class ResultPresenter {
   init(params) {
-
-    statisticsModel.send(params);
+    if (params) {
+      statisticsModel.send(params);
+    }
 
     statisticsModel.load()
       .then((stats) => {
@@ -19,11 +20,7 @@ class ResultPresenter {
         } else {
           this.view = new FailView();
         }
-      })
-      .then(() => {
         show(this.view.element);
-      })
-      .then(() => {
         this.view.onRestartClick = () => {
           location.reload();
           application.welcomeScreen();
@@ -33,25 +30,20 @@ class ResultPresenter {
   }
 
   getPercentHighscore(params) {
-    params.isPlayerResult = true;
-
     const commonStats = statisticsModel.stats;
-
-    commonStats.push(params);
 
     commonStats.sort((a, b) => {
       return b.answers - a.answers || a.time - b.time;
     });
 
     const playerIndex = commonStats.findIndex((item) => {
-      if (item.isPlayerResult) {
-        delete item.isPlayerResult;
+      if (item.correctAnswers === params.correctAnswers && item.time === params.time) {
         return true;
       }
-
       return false;
     });
-    const result = 100 - (playerIndex / commonStats.length) * 100;
+
+    const result = 100 - (Math.abs(playerIndex) / commonStats.length) * 100;
     return Math.floor(result) + `%`;
   }
 }
