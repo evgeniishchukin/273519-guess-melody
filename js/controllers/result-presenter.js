@@ -7,26 +7,31 @@ import {show} from '../utils/utils.js';
 class ResultPresenter {
   init(params) {
     if (params) {
-      statisticsModel.send(params);
+      statisticsModel.send(params)
+        .then(() => {
+          statisticsModel.load()
+            .then((stats) => {
+              statisticsModel.stats = stats;
+            })
+            .then(() => {
+              this.view = new SuccessView(Object.assign({}, params, {percentHighscore: this.getPercentHighscore(params)}));
+              show(this.view.element);
+              this.view.onRestartClick = () => {
+                location.reload();
+                application.welcomeScreen();
+              };
+            })
+            .catch(window.console.error);
+        })
+        .catch(window.console.error);
+    } else {
+      this.view = new FailView();
+      show(this.view.element);
+      this.view.onRestartClick = () => {
+        location.reload();
+        application.welcomeScreen();
+      };
     }
-
-    statisticsModel.load()
-      .then((stats) => {
-        statisticsModel.stats = stats;
-      })
-      .then(() => {
-        if (params) {
-          this.view = new SuccessView(Object.assign({}, params, {percentHighscore: this.getPercentHighscore(params)}));
-        } else {
-          this.view = new FailView();
-        }
-        show(this.view.element);
-        this.view.onRestartClick = () => {
-          location.reload();
-          application.welcomeScreen();
-        };
-      })
-      .catch(window.console.error);
   }
 
   getPercentHighscore(params) {
