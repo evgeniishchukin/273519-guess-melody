@@ -19,7 +19,7 @@ describe(`Game Logic Test`, () => {
     gameModel.questions.forEach((item) => {
       switch (item.type) {
         case gameModel.QuestionType.GENRE:
-          gamePresenter.answer(0, 1);
+          gamePresenter.answer(1, 0);
           break;
         case gameModel.QuestionType.ARTIST:
           gamePresenter.answer(0);
