@@ -6,6 +6,7 @@
 *.psd
 package-lock.json
 *.sublime*
+package-lock.json
 build/
 node_modules/
 Thumbs.db
