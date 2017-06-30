@@ -134,6 +134,7 @@ class GamePresenter {
     if (this.timeLeft <= 0) {
       this.model.state.time = 0;
       this.onFinishGame();
+      return;
     }
 
     const timerMin = document.getElementsByClassName(`timer-value-mins`)[0];
