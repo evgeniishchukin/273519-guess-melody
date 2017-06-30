@@ -131,6 +131,11 @@ class GamePresenter {
   updateTimer() {
     this.timeLeft--;
 
+    if (this.timeLeft <= 0) {
+      this.model.state.time = 0;
+      this.onFinishGame();
+    }
+
     const timerMin = document.getElementsByClassName(`timer-value-mins`)[0];
     const timerSec = document.getElementsByClassName(`timer-value-secs`)[0];
 
