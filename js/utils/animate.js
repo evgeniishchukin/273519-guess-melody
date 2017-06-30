@@ -1,4 +1,4 @@
-window.animation = {
+export const action = {
   getAnimation: (step, stepDuration, steps) => ({
     step, stepDuration, steps
   }),
@@ -7,7 +7,7 @@ window.animation = {
     const interval = setInterval(() => {
       const nextStep = animation.step + 1;
       if (nextStep <= animation.steps) {
-        animation = window.animation.getAnimation(nextStep, animation.stepDuration, animation.steps);
+        animation = action.getAnimation(nextStep, animation.stepDuration, animation.steps);
         callback(animation);
       } else {
         stopFn();
@@ -17,7 +17,9 @@ window.animation = {
       }
     }, animation.stepDuration);
 
-    const stopFn = () => clearInterval(interval);
+    const stopFn = () => {
+      return clearInterval(interval);
+    };
 
     return stopFn;
   }

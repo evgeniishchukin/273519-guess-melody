@@ -11,61 +11,6 @@ class GamePresenter {
     this.model = model;
   }
 
-  init() {
-
-    if (this.model.state.currentIndex === 0) {
-      this.timer = setInterval(() =>
-        this.updateTimer()
-      , 1000);
-    }
-
-    switch (this.currentQuestion.type) {
-      case this.model.QuestionType.ARTIST:
-        this.view = new ArtistView(this.currentQuestion);
-        break;
-      case this.model.QuestionType.GENRE:
-        this.view = new GenreView(this.currentQuestion);
-        break;
-    }
-
-    show(this.view.element);
-    this.view.onAnswer = (...answerIndexes) => {
-      this.answer(...answerIndexes);
-      this.chooseScreen();
-    };
-  }
-
-  destroy() {
-    clearInterval(this.timer);
-    this.resetGame();
-  }
-
-  onNextQuestion() {
-    if (this.model.state.currentIndex === 0) {
-      application.gameScreen();
-    } else {
-      application.showGame();
-    }
-  }
-
-  onFinishGame() {
-    application.showResult(this.isFail);
-    this.destroy();
-  }
-
-  updateTimer() {
-    this.timeLeft--;
-
-    const timerMin = document.getElementsByClassName(`timer-value-mins`)[0];
-    const timerSec = document.getElementsByClassName(`timer-value-secs`)[0];
-
-    const minutes = Math.floor(this.timeLeft / 60);
-    const seconds = this.timeLeft - (minutes * 60);
-
-    timerMin.innerHTML = minutes.toString().length === 1 ? `0${minutes}` : minutes;
-    timerSec.innerHTML = seconds.toString().length === 1 ? `0${seconds}` : seconds;
-  }
-
   get gameTime() {
     return this.model.initState.time - this.model.state.time;
   }
@@ -103,6 +48,45 @@ class GamePresenter {
     return !this.timeLeft || !this.lives;
   }
 
+  init() {
+    if (this.model.state.currentIndex === 0) {
+      this.timer = setInterval(() =>
+        this.updateTimer()
+      , 1000);
+    }
+
+    const QestionType = new Map([
+      [`artist`, new ArtistView(this.currentQuestion)],
+      [`genre`, new GenreView(this.currentQuestion)]
+    ]);
+
+    this.view = QestionType.get(this.currentQuestion.type);
+
+    show(this.view.element);
+    this.view.onAnswer = (...answerIndexes) => {
+      this.answer(...answerIndexes);
+      this.chooseScreen();
+    };
+  }
+
+  destroy() {
+    clearInterval(this.timer);
+    this.resetGame();
+  }
+
+  onNextQuestion() {
+    if (this.model.state.currentIndex === 0) {
+      application.gameScreen();
+    } else {
+      application.showGame();
+    }
+  }
+
+  onFinishGame() {
+    application.showResult(this.isFail);
+    this.destroy();
+  }
+
   resetGame() {
     this.model.state = Object.assign({}, this.model.state, {questions: deepCopy(this.model.questions)});
   }
@@ -136,10 +120,25 @@ class GamePresenter {
     answerIndexes.forEach((item) => {
       answers[item].isUserAnswer = true;
     });
-    let correct = answers.findIndex((item) => item.valid && item.isUserAnswer) >= 0;
+    const correct = answers.findIndex((item) => {
+      return item.valid && item.isUserAnswer;
+    }) >= 0;
     this.currentQuestion.isUserAnswerCorrect = correct;
 
     return correct;
+  }
+
+  updateTimer() {
+    this.timeLeft--;
+
+    const timerMin = document.getElementsByClassName(`timer-value-mins`)[0];
+    const timerSec = document.getElementsByClassName(`timer-value-secs`)[0];
+
+    const minutes = Math.floor(this.timeLeft / 60);
+    const seconds = this.timeLeft - (minutes * 60);
+
+    timerMin.innerHTML = minutes.toString().length === 1 ? `0${minutes}` : minutes;
+    timerSec.innerHTML = seconds.toString().length === 1 ? `0${seconds}` : seconds;
   }
 }
 const game = new GamePresenter(gameModel);

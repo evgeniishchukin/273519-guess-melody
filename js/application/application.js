@@ -3,7 +3,6 @@ import game from '../controllers/game-presenter.js';
 import result from '../controllers/result-presenter.js';
 import model from '../models/game-model.js';
 
-
 const ControllerId = {
   WELCOME: ``,
   GAME: `game`,
@@ -14,7 +13,7 @@ export default class Application {
   constructor() {
 
     window.onhashchange = () => {
-      this.initLocation();
+      return this.initLocation();
     };
 
     this.routes = {
@@ -30,8 +29,12 @@ export default class Application {
 
   init() {
     model.load()
-      .then((data) => this.setup(data))
-      .then(() => this.initLocation())
+      .then((data) => {
+        this.setup(data);
+      })
+      .then(() => {
+        return this.initLocation();
+      })
       .catch(window.console.error);
   }
 

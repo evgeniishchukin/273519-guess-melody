@@ -10,11 +10,34 @@ const gameModelAdapter = new class extends dataAdapter {
 
   preprocess(data) {
     return data.map((item) => {
+      // const QestionType = new Map([
+      //   [`artist`, {
+      //     type: item.type,
+      //     data: {file: item.src},
+      //     answers: gameModelAdapter.proceedArtistAnswers(item.answers)
+      //   }],
+      //   [`genre`, {
+      //     type: item.type,
+      //     data: item.question,
+      //     answers: gameModelAdapter.proceedGenreAnswers(item.answers, item.genre)
+      //   }]
+      // ]);
+      //
+      // return QestionType.get(item.type);
+
       switch (item.type) {
         case `artist`:
-          return {type: item.type, data: {file: item.src}, answers: gameModelAdapter.proceedArtistAnswers(item.answers)};
+          return {
+            type: item.type,
+            data: {file: item.src},
+            answers: gameModelAdapter.proceedArtistAnswers(item.answers)
+          };
         case `genre`:
-          return {type: item.type, data: item.question, answers: gameModelAdapter.proceedGenreAnswers(item.answers, item.genre)};
+          return {
+            type: item.type,
+            data: item.question,
+            answers: gameModelAdapter.proceedGenreAnswers(item.answers, item.genre)
+          };
       }
 
       return {};
@@ -27,13 +50,20 @@ const gameModelAdapter = new class extends dataAdapter {
 
   proceedArtistAnswers(answers) {
     return answers.map((item) => {
-      return {valid: item.isCorrect, artistName: item.title, image: item.image.url};
+      return {
+        valid: item.isCorrect,
+        artistName: item.title,
+        image: item.image.url
+      };
     });
   }
 
   proceedGenreAnswers(answers, correctGenre) {
     return answers.map((item) => {
-      return {valid: item.genre === correctGenre, file: item.src};
+      return {
+        valid: item.genre === correctGenre,
+        file: item.src
+      };
     });
   }
 }();

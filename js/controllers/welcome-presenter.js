@@ -10,7 +10,7 @@ class WelcomePresenter {
   init() {
     show(this.view.element);
     this.view.onStartClick = () => {
-      application.gameScreen();
+      return application.gameScreen();
     };
   }
 }

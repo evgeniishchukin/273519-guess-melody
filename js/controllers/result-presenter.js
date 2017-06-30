@@ -18,7 +18,7 @@ class ResultPresenter {
               show(this.view.element);
               this.view.onRestartClick = () => {
                 location.reload();
-                application.welcomeScreen();
+                return application.welcomeScreen();
               };
             })
             .catch(window.console.error);
@@ -29,16 +29,19 @@ class ResultPresenter {
       show(this.view.element);
       this.view.onRestartClick = () => {
         location.reload();
-        application.welcomeScreen();
+        return application.welcomeScreen();
       };
     }
   }
 
   getPercentHighscore(params) {
     const commonStats = statisticsModel.stats;
+    commonStats.forEach((item) => {
+      item.points = item.correctAnswers + (item.correctAnswers / item.time);
+    });
 
     commonStats.sort((a, b) => {
-      return b.answers - a.answers || a.time - b.time;
+      return b.points - a.points;
     });
 
     const playerIndex = commonStats.findIndex((item) => {

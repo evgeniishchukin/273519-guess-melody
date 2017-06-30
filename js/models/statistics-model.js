@@ -4,7 +4,7 @@ import {USERNAME} from '../data/data.js';
 
 const resultAdapter = new class extends dataAdapter {
   preprocess(data) {
-    data.forEach((item, index) => {
+    data.filter((item, index) => {
       if (!item.hasOwnProperty(`answers`) || !item.hasOwnProperty(`time`)) {
         data.splice(index, 1);
       }
