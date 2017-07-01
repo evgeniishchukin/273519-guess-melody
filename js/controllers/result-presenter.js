@@ -17,6 +17,7 @@ class ResultPresenter {
               this.view = new SuccessView(Object.assign({}, params, {percentHighscore: this.getPercentHighscore(params)}));
               show(this.view.element);
               this.view.onRestartClick = () => {
+                this.view = null;
                 location.reload();
                 return application.welcomeScreen();
               };
@@ -28,6 +29,7 @@ class ResultPresenter {
       this.view = new FailView();
       show(this.view.element);
       this.view.onRestartClick = () => {
+        this.view = null;
         location.reload();
         return application.welcomeScreen();
       };
