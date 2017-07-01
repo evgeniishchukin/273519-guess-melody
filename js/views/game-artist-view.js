@@ -7,7 +7,7 @@ export default class GameArtistView extends AbstractView {
   constructor(question) {
     super();
 
-    this.question = question;
+    this._question = question;
   }
 
   get template() {
@@ -21,8 +21,8 @@ export default class GameArtistView extends AbstractView {
           <h2 class="title main-title">Кто исполняет эту песню?</h2>
           <div class="player-wrapper"></div>
           <form class="main-list">
-            ${[...this.question.answers].map((answer, index) => {
-              return this.createAnswer(index, answer);
+            ${[...this._question.answers].map((answer, index) => {
+              return this._createAnswer(index, answer);
             })}
           </form>
         </div>
@@ -30,7 +30,7 @@ export default class GameArtistView extends AbstractView {
     );
   }
 
-  createAnswer(index, answer) {
+  _createAnswer(index, answer) {
     return (
       `<div class="main-answer-wrapper">
         <input class="main-answer-r" type="radio" id="answer-${index}" name="answer" value="${index}" />
@@ -42,16 +42,12 @@ export default class GameArtistView extends AbstractView {
     );
   }
 
-  onAnswer(...indexes) {
-
-  }
-
   bind() {
     const screenDom = this.element;
     const answers = screenDom.querySelectorAll(`.main-answer-wrapper`);
     const player = screenDom.querySelector(`.player-wrapper`);
 
-    const artistSong = this.question.data;
+    const artistSong = this._question.data;
     initializePlayer(player, artistSong.file, false, true);
 
     const answerListener = (event) => {
@@ -66,5 +62,9 @@ export default class GameArtistView extends AbstractView {
     answers.forEach((item) => {
       item.addEventListener(`click`, answerListener);
     });
+  }
+
+  onAnswer(...indexes) {
+
   }
 }

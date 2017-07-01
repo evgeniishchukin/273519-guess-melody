@@ -13,29 +13,66 @@ export default class Application {
   constructor() {
 
     window.onhashchange = () => {
-      return this.initLocation();
+      return this._initLocation();
     };
 
-    this.routes = {
+    this._routes = {
       [ControllerId.WELCOME]: welcome,
       [ControllerId.GAME]: game,
       [ControllerId.RESULT]: result
     };
   }
 
-  setup(questions) {
-    model.questions = questions;
-  }
-
   init() {
     model.load()
       .then((data) => {
-        this.setup(data);
-      })
-      .then(() => {
-        return this.initLocation();
+        this._setup(data);
+        return this._initLocation();
       })
       .catch(window.console.error);
+  }
+
+  _setup(questions) {
+    model.questions = questions;
+  }
+
+  _initLocation() {
+    const params = this._getJSONHashString(location.hash);
+    this._changeController(this._getRawHashString(location.hash), params);
+  }
+
+  _getRawHashString(hash) {
+    let returnString = hash.replace(`#`, ``);
+
+    const index = hash.indexOf(`=`);
+    if (index > 0) {
+      returnString = returnString.substr(0, index - 1);
+    }
+    return returnString;
+  }
+
+  _getJSONHashString(hash) {
+    const index = hash.indexOf(`=`);
+
+    let returnString = hash.replace(`#`, ``);
+    if (index > 0) {
+      returnString = returnString.substr(index);
+    }
+    try {
+      return JSON.parse(returnString);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  _changeController(route = ``, params) {
+    const controller = this._routes[route];
+    game.destroy();
+    if (controller) {
+      controller.init(params);
+    } else {
+      welcome.init();
+    }
   }
 
   static welcomeScreen() {
@@ -59,45 +96,6 @@ export default class Application {
       location.hash = ControllerId.RESULT;
     } else {
       location.hash = `${ControllerId.RESULT}=${JSON.stringify(game.stats)}`;
-    }
-  }
-
-  initLocation() {
-    const params = this.getJSONHashString(location.hash);
-    this.changeController(this.getRawHashString(location.hash), params);
-  }
-
-  getRawHashString(hash) {
-    let returnString = hash.replace(`#`, ``);
-
-    const index = hash.indexOf(`=`);
-    if (index > 0) {
-      returnString = returnString.substr(0, index - 1);
-    }
-    return returnString;
-  }
-
-  getJSONHashString(hash) {
-    const index = hash.indexOf(`=`);
-
-    let returnString = hash.replace(`#`, ``);
-    if (index > 0) {
-      returnString = returnString.substr(index);
-    }
-    try {
-      return JSON.parse(returnString);
-    } catch (error) {
-      return null;
-    }
-  }
-
-  changeController(route = ``, params) {
-    const controller = this.routes[route];
-    game.destroy();
-    if (controller) {
-      controller.init(params);
-    } else {
-      welcome.init();
     }
   }
 }

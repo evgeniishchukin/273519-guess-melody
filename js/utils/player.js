@@ -1,4 +1,4 @@
-import {action} from '../utils/animate.js';
+import {animate, getAnimation} from '../utils/animate.js';
 
 const updateState = (element, player) => {
   element.querySelector(`.player-status`).style.width = `${parseInt(player.currentTime * 100 / player.duration, 10)}%`;
@@ -11,8 +11,8 @@ const syncState = (player, element) => {
 const switchState = (state, player, element) => {
   if (player.paused) {
     player.play();
-    state.stopAnimation = action.animate(
-        action.getAnimation(player.currentTime, 1000, player.duration),
+    state.stopAnimation = animate(
+        getAnimation(player.currentTime, 1000, player.duration),
         (animation) => updateState(element, player));
   } else {
     player.pause();

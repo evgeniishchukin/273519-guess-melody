@@ -14,10 +14,10 @@ class ResultPresenter {
               statisticsModel.stats = stats;
             })
             .then(() => {
-              this.view = new SuccessView(Object.assign({}, params, {percentHighscore: this.getPercentHighscore(params)}));
-              show(this.view.element);
-              this.view.onRestartClick = () => {
-                this.view = null;
+              this._view = new SuccessView(Object.assign({}, params, {percentHighscore: this._getPercentHighscore(params)}));
+              show(this._view.element);
+              this._view.onRestartClick = () => {
+                this._view = null;
                 location.reload();
                 return application.welcomeScreen();
               };
@@ -26,18 +26,19 @@ class ResultPresenter {
         })
         .catch(window.console.error);
     } else {
-      this.view = new FailView();
-      show(this.view.element);
-      this.view.onRestartClick = () => {
-        this.view = null;
+      this._view = new FailView();
+      show(this._view.element);
+      this._view.onRestartClick = () => {
+        this._view = null;
         location.reload();
         return application.welcomeScreen();
       };
     }
   }
 
-  getPercentHighscore(params) {
+  _getPercentHighscore(params) {
     const commonStats = statisticsModel.stats;
+
     commonStats.sort((a, b) => {
       return b.correctAnswers - a.correctAnswers || a.time - b.time;
     });

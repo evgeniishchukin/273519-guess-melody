@@ -15,13 +15,13 @@ const gameModelAdapter = new class extends dataAdapter {
           return {
             type: item.type,
             data: {file: item.src},
-            answers: gameModelAdapter.proceedArtistAnswers(item.answers)
+            answers: gameModelAdapter._proceedArtistAnswers(item.answers)
           };
         case `genre`:
           return {
             type: item.type,
             data: item.question,
-            answers: gameModelAdapter.proceedGenreAnswers(item.answers, item.genre)
+            answers: gameModelAdapter._proceedGenreAnswers(item.answers, item.genre)
           };
       }
 
@@ -33,7 +33,7 @@ const gameModelAdapter = new class extends dataAdapter {
     return JSON.stringify(data);
   }
 
-  proceedArtistAnswers(answers) {
+  _proceedArtistAnswers(answers) {
     return answers.map((item) => {
       return {
         valid: item.isCorrect,
@@ -43,7 +43,7 @@ const gameModelAdapter = new class extends dataAdapter {
     });
   }
 
-  proceedGenreAnswers(answers, correctGenre) {
+  _proceedGenreAnswers(answers, correctGenre) {
     return answers.map((item) => {
       return {
         valid: item.genre === correctGenre,

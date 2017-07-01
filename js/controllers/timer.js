@@ -11,7 +11,7 @@
 // Длина окружности = 2πR
 // Длина шага = Длина окружности / Количество шагов
 // Пропуск = Длина шага * Номер шага
-import {action} from '../utils/animate.js';
+import {animate, getAnimation} from '../utils/animate.js';
 import formatTime from '../utils/time-format.js';
 
 const redrawCircle = (circle, radius, animation) => {
@@ -47,7 +47,7 @@ export default function initializeCountdown() {
   const radius = parseInt(element.getAttributeNS(null, `r`), 10);
   const timer = document.querySelector(`.timer-value`);
 
-  return action.animate(action.getAnimation(0, 1000, 120), (animation) => {
+  return animate(getAnimation(0, 1000, 120), (animation) => {
     redrawCircle(element, radius, animation);
     redrawTimer(timer, animation);
   }, () => {

@@ -4,12 +4,12 @@ import {show} from '../utils/utils.js';
 
 class WelcomePresenter {
   constructor() {
-    this.view = new WelcomeView();
+    this._view = new WelcomeView();
   }
 
   init() {
-    show(this.view.element);
-    this.view.onStartClick = () => {
+    show(this._view.element);
+    this._view.onStartClick = () => {
       return application.gameScreen();
     };
   }

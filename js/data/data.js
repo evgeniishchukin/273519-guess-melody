@@ -11,4 +11,4 @@ export const gameInfo = Object.freeze({
   Удачи!`
 });
 
-export const USERNAME = `5evgeniyshchukin273519`;
+export const USERNAME = `evgeniyshchukin273519`;

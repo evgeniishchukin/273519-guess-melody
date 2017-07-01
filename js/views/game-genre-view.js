@@ -7,7 +7,7 @@ export default class GameGenreView extends AbstractView {
   constructor(question) {
     super();
 
-    this.question = question;
+    this._question = question;
   }
 
   get template() {
@@ -15,10 +15,10 @@ export default class GameGenreView extends AbstractView {
       `<section class="main main--level main--level-genre">
         ${timer()}
         <div class="main-wrap">
-          <h2 class="title">Выберите ${this.question.data}</h2>
+          <h2 class="title">Выберите ${this._question.data}</h2>
           <form class="genre">
-            ${[...this.question.answers].map((answer, index) => {
-              return this.createSong(index, answer);
+            ${[...this._question.answers].map((answer, index) => {
+              return this._createSong(index, answer);
             }).join(``)}
             <button class="genre-answer-send" type="submit">Ответить</button>
           </form>
@@ -27,7 +27,7 @@ export default class GameGenreView extends AbstractView {
     );
   }
 
-  createSong(index, answer) {
+  _createSong(index, answer) {
     return (
       `<div class="genre-answer">
         <div class="player-wrapper"></div>
@@ -35,10 +35,6 @@ export default class GameGenreView extends AbstractView {
         <label class="genre-answer-check" for="a-${index}"></label>
       </div>`
     );
-  }
-
-  onAnswer(...indexes) {
-
   }
 
   bind() {
@@ -49,7 +45,7 @@ export default class GameGenreView extends AbstractView {
 
     const playerWrappers = [...screenDom.querySelectorAll(`.player-wrapper`)];
 
-    let answerListeners = [];
+    const answerListeners = [];
 
     playerWrappers.forEach((item, i) => {
       const answerListener = (event) => {
@@ -66,11 +62,11 @@ export default class GameGenreView extends AbstractView {
 
       item.addEventListener(`click`, answerListener);
 
-      initializePlayer(item, [...this.question.answers][i].file, false, true);
+      initializePlayer(item, [...this._question.answers][i].file, false, true);
     });
 
     const answerClickHandlerListener = () => {
-      this.answerClickHandler();
+      this._answerClickHandler();
     };
 
     const answerButtonListener = (event) => {
@@ -95,7 +91,11 @@ export default class GameGenreView extends AbstractView {
     this.answerButton.addEventListener(`click`, answerButtonListener);
   }
 
-  answerClickHandler() {
+  onAnswer(...indexes) {
+
+  }
+
+  _answerClickHandler() {
     this.answerButton.disabled = false;
   }
 }

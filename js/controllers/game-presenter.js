@@ -8,141 +8,141 @@ import {deepCopy} from '../utils/utils.js';
 class GamePresenter {
 
   constructor(model) {
-    this.model = model;
-  }
-
-  get gameTime() {
-    return this.model.initState.time - this.model.state.time;
-  }
-
-  set timeLeft(value) {
-    this.model.state.time = value;
-  }
-
-  get timeLeft() {
-    return this.model.state.time;
-  }
-
-  get lives() {
-    return this.model.state.lives;
-  }
-
-  get correctAnswers() {
-    return this.model.state.questions.reduce((sum, question) => {
-      return sum + (question.isUserAnswerCorrect ? 1 : 0);
-    }, 0);
-  }
-
-  get currentQuestion() {
-    return this.model.state.questions[this.model.state.currentIndex];
+    this._model = model;
   }
 
   get stats() {
     const stats = {};
     stats.correctAnswers = this.correctAnswers;
-    stats.time = this.gameTime;
+    stats.time = this._gameTime;
     return stats;
   }
 
-  get isFail() {
-    return !this.timeLeft || !this.lives;
+  get correctAnswers() {
+    return this._model.state.questions.reduce((sum, question) => {
+      return sum + (question.isUserAnswerCorrect ? 1 : 0);
+    }, 0);
+  }
+
+  get _gameTime() {
+    return this._model.initState.time - this._model.state.time;
+  }
+
+  set _timeLeft(value) {
+    this._model.state.time = value;
+  }
+
+  get _timeLeft() {
+    return this._model.state.time;
+  }
+
+  get _lives() {
+    return this._model.state.lives;
+  }
+
+  get _currentQuestion() {
+    return this._model.state.questions[this._model.state.currentIndex];
+  }
+
+  get _isFail() {
+    return !this._timeLeft || !this._lives;
   }
 
   init() {
-    if (this.model.state.currentIndex === 0) {
+    if (this._model.state.currentIndex === 0) {
       this.timer = setInterval(() =>
-        this.updateTimer()
+        this._updateTimer()
       , 1000);
     }
 
     const QestionType = new Map([
-      [`artist`, new ArtistView(this.currentQuestion)],
-      [`genre`, new GenreView(this.currentQuestion)]
+      [`artist`, new ArtistView(this._currentQuestion)],
+      [`genre`, new GenreView(this._currentQuestion)]
     ]);
 
-    this.view = QestionType.get(this.currentQuestion.type);
+    this._view = QestionType.get(this._currentQuestion.type);
 
-    show(this.view.element);
-    this.view.onAnswer = (...answerIndexes) => {
-      this.answer(...answerIndexes);
-      this.chooseScreen();
-      this.view = null;
+    show(this._view.element);
+    this._view.onAnswer = (...answerIndexes) => {
+      this._answer(...answerIndexes);
+      this._chooseScreen();
+      this._view = null;
     };
   }
 
   destroy() {
     clearInterval(this.timer);
-    this.resetGame();
+    this._resetGame();
   }
 
-  onNextQuestion() {
-    if (this.model.state.currentIndex === 0) {
+  _resetGame() {
+    this._model.state = Object.assign({}, this._model.state, {questions: deepCopy(this._model.questions)});
+  }
+
+  _answer(...selectedIndexes) {
+    const correct = this._proceedCurrentAnswer(selectedIndexes);
+    if (!correct) {
+      this._model.state.lives = Math.max(0, this._model.state.lives - 1);
+    }
+  }
+
+  _onNextQuestion() {
+    if (this._model.state.currentIndex === 0) {
       application.gameScreen();
     } else {
       application.showGame();
     }
   }
 
-  onFinishGame() {
-    application.showResult(this.isFail);
+  _onFinishGame() {
+    application.showResult(this._isFail);
     this.destroy();
   }
 
-  resetGame() {
-    this.model.state = Object.assign({}, this.model.state, {questions: deepCopy(this.model.questions)});
-  }
-
-  answer(...selectedIndexes) {
-    const correct = this.proceedCurrentAnswer(selectedIndexes);
-    if (!correct) {
-      this.model.state.lives = Math.max(0, this.model.state.lives - 1);
-    }
-  }
-
-  chooseScreen() {
-    if (this.model.state.lives < 1 || this.model.state.time < 0) {
-      this.onFinishGame();
+  _chooseScreen() {
+    if (this._model.state.lives < 1 || this._model.state.time < 0) {
+      this._onFinishGame();
     } else {
-      this.nextQuestion();
+      this._nextQuestion();
     }
   }
 
-  nextQuestion() {
-    this.model.state.currentIndex++;
-    if (this.model.state.currentIndex >= this.model.questions.length) {
-      this.onFinishGame();
+  _nextQuestion() {
+    this._model.state.currentIndex++;
+    if (this._model.state.currentIndex >= this._model.questions.length) {
+      this._onFinishGame();
     } else {
-      this.onNextQuestion();
+      this._onNextQuestion();
     }
   }
 
-  proceedCurrentAnswer(answerIndexes) {
-    const answers = this.currentQuestion.answers;
+  _proceedCurrentAnswer(answerIndexes) {
+    const answers = this._currentQuestion.answers;
     answerIndexes.forEach((item) => {
       answers[item].isUserAnswer = true;
     });
     const correct = answers.findIndex((item) => {
       return item.valid && item.isUserAnswer;
     }) >= 0;
-    this.currentQuestion.isUserAnswerCorrect = correct;
+    this._currentQuestion.isUserAnswerCorrect = correct;
 
     return correct;
   }
 
-  updateTimer() {
-    this.timeLeft--;
+  _updateTimer() {
+    this._timeLeft--;
 
-    if (this.timeLeft <= 0) {
-      this.model.state.time = 0;
-      this.onFinishGame();
+    if (this._timeLeft <= 0) {
+      this._model.state.time = 0;
+      this._onFinishGame();
       return;
     }
 
     const timerMin = document.getElementsByClassName(`timer-value-mins`)[0];
     const timerSec = document.getElementsByClassName(`timer-value-secs`)[0];
 
-    const minutes = Math.floor(this.timeLeft / 60);
-    const seconds = this.timeLeft - (minutes * 60);
+    const minutes = Math.floor(this._timeLeft / 60);
+    const seconds = this._timeLeft - (minutes * 60);
 
     timerMin.innerHTML = minutes.toString().length === 1 ? `0${minutes}` : minutes;
     timerSec.innerHTML = seconds.toString().length === 1 ? `0${seconds}` : seconds;
