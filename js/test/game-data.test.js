@@ -11,7 +11,7 @@ describe(`Game Logic Test`, () => {
   gameModel.questions = deepCopy(questions);
 
   beforeEach(() => {
-    gamePresenter.resetGame();
+    gamePresenter._resetGame();
     gameModel.questions = deepCopy(questions);
   });
 
@@ -19,51 +19,51 @@ describe(`Game Logic Test`, () => {
     gameModel.questions.forEach((item) => {
       switch (item.type) {
         case gameModel.QuestionType.GENRE:
-          gamePresenter.answer(1, 0);
+          gamePresenter._answer(1, 0);
           break;
         case gameModel.QuestionType.ARTIST:
-          gamePresenter.answer(0);
+          gamePresenter._answer(0);
           break;
       }
     });
 
-    assert.equal(false, gamePresenter.isFail);
+    assert.equal(false, gamePresenter._isFail);
   });
 
   it(`All answers incorrect, game should be fail`, () => {
     questions.forEach((item) => {
       switch (item.type) {
         case gameModel.QuestionType.GENRE:
-          gamePresenter.answer(2);
+          gamePresenter._answer(2);
           break;
         case gameModel.QuestionType.ARTIST:
-          gamePresenter.answer(2);
+          gamePresenter._answer(2);
           break;
       }
     });
 
-    assert.equal(true, gamePresenter.isFail);
+    assert.equal(true, gamePresenter._isFail);
   });
 
   it(`All answers incorrect, lives should be 0`, () => {
     questions.forEach((item) => {
       switch (item.type) {
         case gameModel.QuestionType.GENRE:
-          gamePresenter.answer(2);
+          gamePresenter._answer(2);
           break;
         case gameModel.QuestionType.ARTIST:
-          gamePresenter.answer(1);
+          gamePresenter._answer(1);
           break;
       }
     });
 
-    assert.equal(0, gamePresenter.lives);
+    assert.equal(0, gamePresenter._lives);
   });
 
   it(`Time left, game should be fail`, () => {
-    gamePresenter.resetGame();
-    gamePresenter.timeLeft = 0;
+    gamePresenter._resetGame();
+    gamePresenter._timeLeft = 0;
 
-    assert.equal(true, gamePresenter.isFail);
+    assert.equal(true, gamePresenter._isFail);
   });
 });

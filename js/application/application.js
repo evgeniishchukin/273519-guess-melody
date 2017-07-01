@@ -3,7 +3,6 @@ import game from '../controllers/game-presenter.js';
 import result from '../controllers/result-presenter.js';
 import model from '../models/game-model.js';
 
-
 const ControllerId = {
   WELCOME: ``,
   GAME: `game`,
@@ -14,25 +13,66 @@ export default class Application {
   constructor() {
 
     window.onhashchange = () => {
-      this.initLocation();
+      return this._initLocation();
     };
 
-    this.routes = {
+    this._routes = {
       [ControllerId.WELCOME]: welcome,
       [ControllerId.GAME]: game,
       [ControllerId.RESULT]: result
     };
   }
 
-  setup(questions) {
+  init() {
+    model.load()
+      .then((data) => {
+        this._setup(data);
+        return this._initLocation();
+      })
+      .catch(window.console.error);
+  }
+
+  _setup(questions) {
     model.questions = questions;
   }
 
-  init() {
-    model.load()
-      .then((data) => this.setup(data))
-      .then(() => this.initLocation())
-      .catch(window.console.error);
+  _initLocation() {
+    const params = this._getJSONHashString(location.hash);
+    this._changeController(this._getRawHashString(location.hash), params);
+  }
+
+  _getRawHashString(hash) {
+    let returnString = hash.replace(`#`, ``);
+
+    const index = hash.indexOf(`=`);
+    if (index > 0) {
+      returnString = returnString.substr(0, index - 1);
+    }
+    return returnString;
+  }
+
+  _getJSONHashString(hash) {
+    const index = hash.indexOf(`=`);
+
+    let returnString = hash.replace(`#`, ``);
+    if (index > 0) {
+      returnString = returnString.substr(index);
+    }
+    try {
+      return JSON.parse(returnString);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  _changeController(route = ``, params) {
+    const controller = this._routes[route];
+    game.destroy();
+    if (controller) {
+      controller.init(params);
+    } else {
+      welcome.init();
+    }
   }
 
   static welcomeScreen() {
@@ -52,50 +92,10 @@ export default class Application {
   }
 
   static showResult(finResult) {
-    location.hash = ControllerId.RESULT;
     if (finResult) {
       location.hash = ControllerId.RESULT;
     } else {
       location.hash = `${ControllerId.RESULT}=${JSON.stringify(game.stats)}`;
-    }
-  }
-
-  initLocation() {
-    const params = this.getJSONHashString(location.hash);
-    this.changeController(this.getRawHashString(location.hash), params);
-  }
-
-  getRawHashString(hash) {
-    let returnString = hash.replace(`#`, ``);
-
-    const index = hash.indexOf(`=`);
-    if (index > 0) {
-      returnString = returnString.substr(0, index - 1);
-    }
-    return returnString;
-  }
-
-  getJSONHashString(hash) {
-    const index = hash.indexOf(`=`);
-
-    let returnString = hash.replace(`#`, ``);
-    if (index > 0) {
-      returnString = returnString.substr(index);
-    }
-    try {
-      return JSON.parse(returnString);
-    } catch (error) {
-      return null;
-    }
-  }
-
-  changeController(route = ``, params) {
-    const controller = this.routes[route];
-    game.destroy();
-    if (controller) {
-      controller.init(params);
-    } else {
-      welcome.init();
     }
   }
 }
