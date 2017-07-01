@@ -12,7 +12,7 @@
 // Длина шага = Длина окружности / Количество шагов
 // Пропуск = Длина шага * Номер шага
 import {action} from '../utils/animate.js';
-import {formatTime} from '../utils/time-format.js';
+import formatTime from '../utils/time-format.js';
 
 const redrawCircle = (circle, radius, animation) => {
   const length = 2 * Math.PI * radius;
@@ -42,7 +42,7 @@ const redrawTimer = (timer, animation) => {
 };
 
 
-export const initializeCountdown = () => {
+export default function initializeCountdown() {
   const element = document.querySelector(`.timer-line`);
   const radius = parseInt(element.getAttributeNS(null, `r`), 10);
   const timer = document.querySelector(`.timer-value`);
@@ -53,4 +53,4 @@ export const initializeCountdown = () => {
   }, () => {
     return timer.classList.add(`timer-value--finished`);
   });
-};
+}

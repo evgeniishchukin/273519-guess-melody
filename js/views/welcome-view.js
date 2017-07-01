@@ -21,11 +21,6 @@ export default class WelcomeView extends AbstractView {
   bind() {
     const buttonListener = (event) => {
       this.onStartClick();
-      removeListeners();
-    };
-
-    const removeListeners = () => {
-      button.removeEventListener(`click`, buttonListener);
     };
 
     const button = this.element.querySelector(`.main-play`);

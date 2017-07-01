@@ -5,7 +5,7 @@ const updateState = (element, player) => {
 };
 
 const syncState = (player, element) => {
-  return element.classList.toggle(`player--is-playing`, !player.paused);
+  element.classList.toggle(`player--is-playing`, !player.paused);
 };
 
 const switchState = (state, player, element) => {
@@ -41,7 +41,7 @@ const destroyPlayer = (element, state) => {
 };
 
 
-export const initializePlayer = (element, file, autoplay = false, controllable = true) => {
+export default function initializePlayer(element, file, autoplay = false, controllable = true) {
   let state = {};
 
   const content = document.querySelector(`template`)
@@ -68,6 +68,6 @@ export const initializePlayer = (element, file, autoplay = false, controllable =
   element.classList.toggle(`player--no-controls`, !controllable);
 
   return () => {
-    destroyPlayer(element, state);
+    return destroyPlayer(element, state);
   };
-};
+}

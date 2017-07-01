@@ -55,7 +55,6 @@ export default class Application {
   }
 
   static showResult(finResult) {
-    location.hash = ControllerId.RESULT;
     if (finResult) {
       location.hash = ControllerId.RESULT;
     } else {

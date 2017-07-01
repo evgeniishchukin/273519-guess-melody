@@ -20,11 +20,6 @@ export default class ResultFailView extends AbstractView {
 
     const buttonListener = (event) => {
       this.onRestartClick();
-      removeListeners();
-    };
-
-    const removeListeners = () => {
-      button.removeEventListener(`click`, buttonListener);
     };
 
     const button = screenDom.querySelector(`.main-replay`);

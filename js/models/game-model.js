@@ -10,21 +10,6 @@ const gameModelAdapter = new class extends dataAdapter {
 
   preprocess(data) {
     return data.map((item) => {
-      // const QestionType = new Map([
-      //   [`artist`, {
-      //     type: item.type,
-      //     data: {file: item.src},
-      //     answers: gameModelAdapter.proceedArtistAnswers(item.answers)
-      //   }],
-      //   [`genre`, {
-      //     type: item.type,
-      //     data: item.question,
-      //     answers: gameModelAdapter.proceedGenreAnswers(item.answers, item.genre)
-      //   }]
-      // ]);
-      //
-      // return QestionType.get(item.type);
-
       switch (item.type) {
         case `artist`:
           return {

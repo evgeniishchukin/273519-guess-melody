@@ -66,6 +66,7 @@ class GamePresenter {
     this.view.onAnswer = (...answerIndexes) => {
       this.answer(...answerIndexes);
       this.chooseScreen();
+      this.view = null;
     };
   }
 

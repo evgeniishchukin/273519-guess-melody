@@ -36,19 +36,12 @@ class ResultPresenter {
 
   getPercentHighscore(params) {
     const commonStats = statisticsModel.stats;
-    commonStats.forEach((item) => {
-      item.points = item.correctAnswers + (item.correctAnswers / item.time);
-    });
-
     commonStats.sort((a, b) => {
-      return b.points - a.points;
+      return b.correctAnswers - a.correctAnswers || a.time - b.time;
     });
 
     const playerIndex = commonStats.findIndex((item) => {
-      if (item.correctAnswers === params.correctAnswers && item.time === params.time) {
-        return true;
-      }
-      return false;
+      return item.correctAnswers === params.correctAnswers && item.time === params.time;
     });
 
     const result = 100 - (Math.abs(playerIndex) / commonStats.length) * 100;

@@ -1,6 +1,6 @@
 import AbstractView from './abstract-view.js';
 import timer from './timer-view';
-import {initializePlayer} from '../utils/player.js';
+import initializePlayer from '../utils/player.js';
 
 export default class GameArtistView extends AbstractView {
 
@@ -61,14 +61,6 @@ export default class GameArtistView extends AbstractView {
       const index = wrapperElement.querySelector(`.main-answer-r`).value;
 
       this.onAnswer(index);
-
-      removeListeners();
-    };
-
-    const removeListeners = () => {
-      answers.forEach((item) => {
-        item.removeEventListener(`click`, answerListener);
-      });
     };
 
     answers.forEach((item) => {
