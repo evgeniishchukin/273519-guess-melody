@@ -11,6 +11,9 @@
 // Длина окружности = 2πR
 // Длина шага = Длина окружности / Количество шагов
 // Пропуск = Длина шага * Номер шага
+import {animate, getAnimation} from '../utils/animate.js';
+import formatTime from '../utils/time-format.js';
+
 const redrawCircle = (circle, radius, animation) => {
   const length = 2 * Math.PI * radius;
   const stepLength = length / animation.steps;
@@ -23,12 +26,14 @@ const redrawCircle = (circle, radius, animation) => {
   return circle;
 };
 
-const addLeadingZero = (val) => val < 10 ? `0${val}` : val;
+const addLeadingZero = (val) => {
+  return val < 10 ? `0${val}` : val;
+};
 
 const redrawTimer = (timer, animation) => {
   const total = animation.stepDuration * animation.steps;
   const passed = animation.stepDuration * animation.step;
-  const timeLeft = window.formatTime(total, passed);
+  const timeLeft = formatTime(total, passed);
 
   timer.querySelector(`.timer-value-mins`).textContent = addLeadingZero(timeLeft.minutes);
   timer.querySelector(`.timer-value-secs`).textContent = addLeadingZero(timeLeft.seconds);
@@ -37,13 +42,15 @@ const redrawTimer = (timer, animation) => {
 };
 
 
-window.initializeCountdown = () => {
+export default function initializeCountdown() {
   const element = document.querySelector(`.timer-line`);
   const radius = parseInt(element.getAttributeNS(null, `r`), 10);
   const timer = document.querySelector(`.timer-value`);
 
-  return window.animation.animate(window.animation.getAnimation(0, 1000, 120), (animation) => {
+  return animate(getAnimation(0, 1000, 120), (animation) => {
     redrawCircle(element, radius, animation);
     redrawTimer(timer, animation);
-  }, () => timer.classList.add(`timer-value--finished`));
-};
+  }, () => {
+    return timer.classList.add(`timer-value--finished`);
+  });
+}

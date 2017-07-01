@@ -26,7 +26,9 @@ export default class dataModel {
 
   load(adapter = defaultDataAdapter) {
     return fetch(this.urlRead)
-      .then((resp) => resp.json())
+      .then((resp) => {
+        return resp.json();
+      })
       .then(adapter.preprocess);
   }
 

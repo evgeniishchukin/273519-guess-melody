@@ -6,26 +6,26 @@ export default class AbstractView {
 
   get element() {
     if (!this._element) {
-      this.getMarkup();
+      this._getMarkup();
     }
 
     return this._element;
-  }
-
-  render() {
-    return this.createElement(this.template);
   }
 
   bind() {
 
   }
 
-  getMarkup() {
-    this._element = this.render();
+  _render() {
+    return this._createElement(this.template);
+  }
+
+  _getMarkup() {
+    this._element = this._render();
     this.bind();
   }
 
-  createElement(template) {
+  _createElement(template) {
     const outer = document.createElement(`template`);
     outer.innerHTML = template;
     return outer.content;
