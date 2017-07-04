@@ -48,7 +48,7 @@ export default class GameArtistView extends AbstractView {
     const player = screenDom.querySelector(`.player-wrapper`);
 
     const artistSong = this._question.data;
-    initializePlayer(player, artistSong.file, false, true);
+    initializePlayer(player, artistSong.file, true, true);
 
     const answerListener = (event) => {
       event.preventDefault();
