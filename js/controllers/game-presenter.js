@@ -148,9 +148,12 @@ class GamePresenter {
     answerIndexes.forEach((item) => {
       answers[item].isUserAnswer = true;
     });
-    const correct = answers.findIndex((item) => {
-      return item.valid && item.isUserAnswer;
-    }) >= 0;
+    const correct = answers.filter((answer) => {
+      return answer.isUserAnswer;
+    }).every((answer) => {
+      return answer.valid;
+    });
+
     this._currentQuestion.isUserAnswerCorrect = correct;
 
     return correct;
