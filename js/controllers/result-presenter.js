@@ -12,8 +12,6 @@ class ResultPresenter {
           statisticsModel.load()
             .then((stats) => {
               statisticsModel.stats = stats;
-            })
-            .then(() => {
               this._view = new SuccessView(Object.assign({}, params, {percentHighscore: this._getPercentHighscore(params)}));
               show(this._view.element);
               this._view.onRestartClick = () => {
@@ -40,14 +38,21 @@ class ResultPresenter {
     const commonStats = statisticsModel.stats;
 
     commonStats.sort((a, b) => {
-      return b.correctAnswers - a.correctAnswers || a.time - b.time;
+      return b.points - a.points || a.time - b.time;
     });
 
     const playerIndex = commonStats.findIndex((item) => {
-      return item.correctAnswers === params.correctAnswers && item.time === params.time;
+      return item.points === params.points && item.time === params.time;
     });
 
-    const result = 100 - (Math.abs(playerIndex) / commonStats.length) * 100;
+    let result = 0;
+
+    if (playerIndex === 0 || commonStats.length === 1) {
+      result = 100;
+    } else if (playerIndex !== commonStats.length - 1) {
+      result = 100 - (Math.abs(playerIndex + 1) / commonStats.length) * 100;
+    }
+
     return Math.floor(result) + `%`;
   }
 }
