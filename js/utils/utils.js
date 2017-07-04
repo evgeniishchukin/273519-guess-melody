@@ -23,6 +23,14 @@ export const shuffleArray = (array) => {
   return array;
 };
 
+export const preloadAudio = (urls) => {
+  return Promise.all(urls.map((url) => new Promise((resolve) => {
+    const audio = new Audio();
+    audio.addEventListener(`canplaythrough`, resolve, false);
+    audio.src = url;
+  })));
+};
+
 export const getRandomElement = (array) => {
   const number = Math.round(Math.random() * (array.length - 1));
   return array[number];

@@ -2,6 +2,7 @@ import welcome from '../controllers/welcome-presenter.js';
 import game from '../controllers/game-presenter.js';
 import result from '../controllers/result-presenter.js';
 import model from '../models/game-model.js';
+import {preloadAudio} from '../utils/utils.js';
 
 const ControllerId = {
   WELCOME: ``,
@@ -27,6 +28,27 @@ export default class Application {
     model.load()
       .then((data) => {
         this._setup(data);
+        return data.reduce((sum, question) => {
+          switch (question.type) {
+            case `genre`:
+              return sum.concat(question.answers
+                .filter((answer) => {
+                  return answer.src;
+                })
+                .map((answer) => {
+                  return answer.src;
+                }));
+            case `artist`:
+              return question.src ? sum.concat(question.src) : sum;
+            default:
+              return sum;
+          }
+        }, []);
+      })
+      .then((urls) => {
+        return preloadAudio(urls);
+      })
+      .then(() => {
         return this._initLocation();
       })
       .catch(window.console.error);
