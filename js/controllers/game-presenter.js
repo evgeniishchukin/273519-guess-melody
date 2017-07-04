@@ -145,9 +145,11 @@ class GamePresenter {
 
   _proceedCurrentAnswer(answerIndexes) {
     const answers = this._currentQuestion.answers;
+
     answerIndexes.forEach((item) => {
       answers[item].isUserAnswer = true;
     });
+
     const correct = answers.filter((answer) => {
       return answer.valid || answer.isUserAnswer;
     }).every((answer) => {
