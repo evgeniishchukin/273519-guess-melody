@@ -36,13 +36,13 @@ export default class Application {
             case `genre`:
               return sum.concat(question.answers
                 .filter((answer) => {
-                  return answer.src;
+                  return answer.file;
                 })
                 .map((answer) => {
-                  return answer.src;
+                  return answer.file;
                 }));
             case `artist`:
-              return question.src ? sum.concat(question.src) : sum;
+              return question.data.file ? sum.concat(question.data.file) : sum;
             default:
               return sum;
           }
