@@ -4,6 +4,7 @@ import gameModel from '../models/game-model.js';
 import application from '../application/application.js';
 import {show} from '../utils/utils.js';
 import {deepCopy} from '../utils/utils.js';
+import redrawCircle from './timer.js';
 
 class GamePresenter {
 
@@ -13,12 +14,25 @@ class GamePresenter {
 
   get stats() {
     const stats = {};
-    stats.correctAnswers = this.correctAnswers;
+    stats.correctAnswers = this._correctAnswers;
+    stats.points = this.points;
     stats.time = this._gameTime;
     return stats;
   }
 
-  get correctAnswers() {
+  get points() {
+    return this._model.state.questions.reduce((sum, question) => {
+      if (question.isUserAnswerCorrect && question.answerTime < 10) {
+        return sum + 2;
+      } else if (question.isUserAnswerCorrect) {
+        return sum + 1;
+      } else {
+        return sum;
+      }
+    }, 0);
+  }
+
+  get _correctAnswers() {
     return this._model.state.questions.reduce((sum, question) => {
       return sum + (question.isUserAnswerCorrect ? 1 : 0);
     }, 0);
@@ -26,6 +40,14 @@ class GamePresenter {
 
   get _gameTime() {
     return this._model.initState.time - this._model.state.time;
+  }
+
+  get _initTime() {
+    return this._model.state.initTime;
+  }
+
+  get _timeAnswer() {
+    return this._initTime - this._timeLeft;
   }
 
   set _timeLeft(value) {
@@ -63,8 +85,12 @@ class GamePresenter {
     this._view = QestionType.get(this._currentQuestion.type);
 
     show(this._view.element);
+    this._model.state.initTime = this._model.state.time;
+    redrawCircle(this._model.state.time);
+
     this._view.onAnswer = (...answerIndexes) => {
       this._answer(...answerIndexes);
+      this._currentQuestion.answerTime = this._timeAnswer;
       this._chooseScreen();
       this._view = null;
     };
@@ -109,6 +135,7 @@ class GamePresenter {
 
   _nextQuestion() {
     this._model.state.currentIndex++;
+
     if (this._model.state.currentIndex >= this._model.questions.length) {
       this._onFinishGame();
     } else {
