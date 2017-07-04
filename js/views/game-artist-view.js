@@ -14,10 +14,8 @@ export default class GameArtistView extends AbstractView {
     return (
       `<section class="main main--level main--level-artist">
         ${timer()}
-
         <div class="main-wrap">
           <div class="main-timer"></div>
-
           <h2 class="title main-title">Кто исполняет эту песню?</h2>
           <div class="player-wrapper"></div>
           <form class="main-list">

@@ -59,14 +59,22 @@ export default class GameGenreView extends AbstractView {
       };
 
       answerListeners.push(answerListener);
-
       item.addEventListener(`click`, answerListener);
 
       initializePlayer(item, [...this._question.answers][i].file, false, true);
     });
 
     const answerClickHandlerListener = () => {
-      this._answerClickHandler();
+      const inputsChecked = Array.from(document.getElementsByTagName(`input`))
+        .some((input) => {
+          return input.checked;
+        });
+
+      if (inputsChecked) {
+        this._answerClickHandler();
+      } else {
+        this.__answerClickHandlerDisabled();
+      }
     };
 
     const answerButtonListener = (event) => {
@@ -97,5 +105,9 @@ export default class GameGenreView extends AbstractView {
 
   _answerClickHandler() {
     this.answerButton.disabled = false;
+  }
+
+  __answerClickHandlerDisabled() {
+    this.answerButton.disabled = true;
   }
 }
