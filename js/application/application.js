@@ -2,7 +2,8 @@ import welcome from '../controllers/welcome-presenter.js';
 import game from '../controllers/game-presenter.js';
 import result from '../controllers/result-presenter.js';
 import model from '../models/game-model.js';
-import {preloadAudio} from '../utils/utils.js';
+import preloader from '../views/preloader-view.js';
+import {preloadAudio, show} from '../utils/utils.js';
 
 const ControllerId = {
   WELCOME: ``,
@@ -25,6 +26,8 @@ export default class Application {
   }
 
   init() {
+    show(preloader.element);
+
     model.load()
       .then((data) => {
         this._setup(data);
