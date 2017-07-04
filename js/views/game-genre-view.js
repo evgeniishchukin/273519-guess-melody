@@ -65,11 +65,12 @@ export default class GameGenreView extends AbstractView {
     });
 
     const answerClickHandlerListener = () => {
-      const checkedInputs = Array.from(document.getElementsByTagName(`input`))
-      .some((input) => {
-        return input.checked === true;
-      });
-      if (checkedInputs) {
+      const inputsChecked = Array.from(document.getElementsByTagName(`input`))
+        .some((input) => {
+          return input.checked;
+        });
+
+      if (inputsChecked) {
         this._answerClickHandler();
       } else {
         this.__answerClickHandlerDisabled();
