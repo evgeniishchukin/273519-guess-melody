@@ -1,6 +1,6 @@
 export const initialState = Object.freeze({
   'time': 120,
-  'lives': 3,
+  'lives': 10,
   'currentIndex': 0,
 });
 
