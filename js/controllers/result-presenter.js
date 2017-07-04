@@ -9,18 +9,17 @@ class ResultPresenter {
     if (params) {
       statisticsModel.send(params)
         .then(() => {
-          statisticsModel.load()
-            .then((stats) => {
-              statisticsModel.stats = stats;
-              this._view = new SuccessView(Object.assign({}, params, {percentHighscore: this._getPercentHighscore(params)}));
-              show(this._view.element);
-              this._view.onRestartClick = () => {
-                this._view = null;
-                location.reload();
-                return application.welcomeScreen();
-              };
-            })
-            .catch(window.console.error);
+          return statisticsModel.load();
+        })
+        .then((stats) => {
+          statisticsModel.stats = stats;
+          this._view = new SuccessView(Object.assign({}, params, {percentHighscore: this._getPercentHighscore(params)}));
+          show(this._view.element);
+          this._view.onRestartClick = () => {
+            this._view = null;
+            location.reload();
+            return application.welcomeScreen();
+          };
         })
         .catch(window.console.error);
     } else {
