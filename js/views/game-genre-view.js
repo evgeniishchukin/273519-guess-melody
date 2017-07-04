@@ -1,6 +1,7 @@
 import AbstractView from './abstract-view.js';
 import timer from './timer-view';
 import initializePlayer from '../utils/player.js';
+import {disableItems} from '../utils/utils.js';
 
 export default class GameGenreView extends AbstractView {
 
@@ -79,6 +80,9 @@ export default class GameGenreView extends AbstractView {
 
     const answerButtonListener = (event) => {
       event.preventDefault();
+
+      this.__answerClickHandlerDisabled();
+      disableItems(this.answers);
 
       const answerIndexes = [];
       [...this.answers].forEach((item, i, array) => {

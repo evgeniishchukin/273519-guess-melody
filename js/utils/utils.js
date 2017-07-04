@@ -58,3 +58,9 @@ export const show = (element) => {
   mainScreen.innerHTML = ``;
   mainScreen.appendChild(element);
 };
+
+export const disableItems = (items) => {
+  items.forEach((item) => {
+    item.style.pointerEvents = `none`;
+  });
+};

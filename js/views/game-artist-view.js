@@ -1,6 +1,7 @@
 import AbstractView from './abstract-view.js';
 import timer from './timer-view';
 import initializePlayer from '../utils/player.js';
+import {disableItems} from '../utils/utils.js';
 
 export default class GameArtistView extends AbstractView {
 
@@ -50,6 +51,8 @@ export default class GameArtistView extends AbstractView {
 
     const answerListener = (event) => {
       event.preventDefault();
+
+      disableItems(answers);
 
       const wrapperElement = event.currentTarget;
       const index = wrapperElement.querySelector(`.main-answer-r`).value;
